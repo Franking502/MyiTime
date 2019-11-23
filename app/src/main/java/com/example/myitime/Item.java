@@ -4,6 +4,61 @@ public class Item {
 
     private String Title;//活动名称
     private int CoverResourceId;//图片id
+    private int year;//事件年份
+    private int month;//事件月份
+    private int date;//事件日期
+    private int hour;//事件时
+    private int minute;//事件分
+    private int second;//事件秒
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
+    }
+
+    public int getSecond() {
+        return second;
+    }
+
+    public void setSecond(int second) {
+        this.second = second;
+    }
+
 
     public Item(String title,int coverResourceId){
         setTitle(title);
