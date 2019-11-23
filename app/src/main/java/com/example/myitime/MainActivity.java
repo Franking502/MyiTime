@@ -1,12 +1,17 @@
 package com.example.myitime;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
+    private DrawerLayout mDrawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +38,25 @@ public class MainActivity extends AppCompatActivity {
         ItemAdapter adapter = new ItemAdapter(
                 MainActivity.this, R.layout.list_view_item, listItem);
         listViewItems.setAdapter(adapter);
+
+        mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                break;
+
+            default:
+        }
+        return true;
     }
 
     private void init() {
