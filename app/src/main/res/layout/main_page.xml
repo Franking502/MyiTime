@@ -6,13 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <include layout="@layout/float_button" />
-
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:transformPivotX="345dp"
-        android:transformPivotY="660dp">
+        android:transformPivotY="660dp"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ListView
             android:id="@+id/list_view_item"
@@ -25,6 +28,17 @@
             android:dividerHeight="1dp"
             tools:ignore="MissingConstraints,RtlHardcoded">
         </ListView>
-    </FrameLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:translationX="350dp"
+            android:translationY="540dp"
+            app:backgroundTint="@color/colorPrimary"
+            app:maxImageSize="76dp"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

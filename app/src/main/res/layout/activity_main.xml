@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/float_button" />
+
         <include
             layout="@layout/main_page"
             android:layout_width="match_parent"
