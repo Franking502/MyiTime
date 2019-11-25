@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    android:theme="@style/AppTheme.NoActionBar">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,12 +20,12 @@
     </FrameLayout>
 
     <!--以下是drawerlayout中的内容-->
-    <TextView
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:text="This is menu"
-        android:textSize="30sp"
-        android:background="#FFF"/>
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/nav_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

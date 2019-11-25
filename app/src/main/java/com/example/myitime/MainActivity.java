@@ -18,6 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +43,47 @@ public class MainActivity extends AppCompatActivity {
         listViewItems.setAdapter(adapter);
 
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
+        NavigationView navView=(NavigationView)findViewById(R.id.nav_view); //nav_view是drawer中的内容
         ActionBar actionBar=getSupportActionBar();
+        //下面逐个处理侧拉菜单中的各个选项：
+        navView.setCheckedItem(R.id.nav_count);//设置默认选项为计时
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getTitle().equals("计时")) {
+                    Toast.makeText(MainActivity.this,"计时",Toast.LENGTH_SHORT).show();
+                }
+
+                if (menuItem.getTitle().equals("标签")) {
+                    Toast.makeText(MainActivity.this,"标签",Toast.LENGTH_SHORT).show();
+                }
+
+                if (menuItem.getTitle().equals("小部件")) {
+                    Toast.makeText(MainActivity.this,"小部件",Toast.LENGTH_SHORT).show();
+                }
+
+                if (menuItem.getTitle().equals("主题色")) {
+                    Toast.makeText(MainActivity.this,"主题色",Toast.LENGTH_SHORT).show();
+                }
+
+                if(menuItem.getTitle().equals("设置")){
+                    Toast.makeText(MainActivity.this,"设置",Toast.LENGTH_SHORT).show();
+                }
+
+                if(menuItem.getTitle().equals("关于")){
+                    Toast.makeText(MainActivity.this,"关于",Toast.LENGTH_SHORT).show();
+                }
+
+                if(menuItem.getTitle().equals("帮助")){
+                    Toast.makeText(MainActivity.this,"帮助",Toast.LENGTH_SHORT).show();
+                }
+
+                return false;
+            }
+        });
+
+
+
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size);
