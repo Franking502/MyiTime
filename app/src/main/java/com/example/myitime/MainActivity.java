@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
+    Button addButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,20 +76,27 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this,"关于",Toast.LENGTH_SHORT).show();
                 }
 
-                if(menuItem.getTitle().equals("帮助")){
-                    Toast.makeText(MainActivity.this,"帮助",Toast.LENGTH_SHORT).show();
+                if(menuItem.getTitle().equals("帮助与反馈")){
+                    Toast.makeText(MainActivity.this,"帮助与反馈",Toast.LENGTH_SHORT).show();
                 }
 
                 return false;
             }
         });
 
-
-
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size);
         }
+
+        //设置floatbutton的功能
+        addButton=(Button)findViewById(R.id.floating_action_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //这里跳转到新建页面活动
+            }
+        });
     }
 
     @Override
