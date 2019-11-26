@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
-    Button addButton;
+    FloatingActionButton addButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,11 +91,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //设置floatbutton的功能
-        addButton=(Button)findViewById(R.id.floating_action_button);
+        addButton=(FloatingActionButton) findViewById(R.id.floating_action_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //这里跳转到新建页面活动
+
             }
         });
     }

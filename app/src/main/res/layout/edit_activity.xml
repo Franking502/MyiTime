@@ -7,8 +7,9 @@
     tools:context=".EditActivity">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/edit_head_cardview"
         android:layout_width="409dp"
-        android:layout_height="300dp"
+        android:layout_height="250dp"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         app:cardBackgroundColor="@color/colorPrimary"
@@ -54,17 +55,39 @@
             android:translationX="75dp"
             android:translationY="155dp" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="1"
-            android:clickable="true"
-            app:backgroundTint="@color/colorPrimary"
-            app:borderWidth="0dp"
-            app:rippleColor="@color/colorPrimary"
+        <ImageButton
+            android:id="@+id/image_button_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:color/transparent"
+            android:translationX="10dp"
+            android:translationY="10dp"
             app:srcCompat="?attr/actionModeCloseDrawable" />
 
+        <ImageButton
+            android:id="@+id/imageButton4"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@color/colorPrimary"
+            android:scaleType="centerInside"
+            android:translationX="355dp"
+            android:translationY="21dp"
+            app:srcCompat="@drawable/tick" />
+
     </androidx.cardview.widget.CardView>
+
+    <ListView
+        android:id="@+id/seting_item_list"
+        android:layout_width="409dp"
+        android:layout_height="479dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_head_cardview" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
