@@ -4,12 +4,17 @@ public class Item {
 
     private String Title;//活动名称
     private int CoverResourceId;//图片id
+    private String period;//周期
     private int year;//事件年份
     private int month;//事件月份
     private int date;//事件日期
     private int hour;//事件时
     private int minute;//事件分
     private int second;//事件秒
+
+    public String getPeriod() { return period; }
+
+    public void setPeriod(String period) { this.period = period; }
 
     public int getYear() {
         return year;
@@ -59,11 +64,6 @@ public class Item {
         this.second = second;
     }
 
-
-    public Item(String title,int coverResourceId){
-        setTitle(title);
-        setCoverResourceId(coverResourceId);
-    }
     public String getTitle() {
         return Title;
     }
@@ -78,5 +78,10 @@ public class Item {
 
     public void setCoverResourceId(int coverResourceId) {
         CoverResourceId = coverResourceId;
+    }
+
+    public Item(String title,int coverResourceId){
+        setTitle(title);
+        setCoverResourceId(coverResourceId);
     }
 }
