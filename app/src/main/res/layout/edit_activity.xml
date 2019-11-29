@@ -65,7 +65,7 @@
             app:srcCompat="?attr/actionModeCloseDrawable" />
 
         <ImageButton
-            android:id="@+id/imageButton4"
+            android:id="@+id/image_button_done"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:background="@color/colorPrimary"
@@ -90,6 +90,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_head_cardview"
         app:layout_constraintVertical_bias="0.0" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

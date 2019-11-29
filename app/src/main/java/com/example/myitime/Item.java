@@ -3,6 +3,7 @@ package com.example.myitime;
 public class Item {
 
     private String Title;//活动名称
+    private String Description;//活动描述
     private int CoverResourceId;//图片id
     private String period;//周期
     private int year;//事件年份
@@ -80,8 +81,8 @@ public class Item {
         CoverResourceId = coverResourceId;
     }
 
-    public Item(String title,int coverResourceId){
+    public Item(String title,int icon){
         setTitle(title);
-        setCoverResourceId(coverResourceId);
+        setCoverResourceId(icon);
     }
 }

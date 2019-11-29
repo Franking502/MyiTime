@@ -5,23 +5,35 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
 
     ListView editList;
     private List<EditItem> listEditItem = new ArrayList<EditItem>();
+    private ImageButton buttonDone,buttonBack;
+    private EditText editName,editRemark;
+
 
     //每次打开这个页面都要初始化list，添加日期、重复、图片、置顶四个功能
     @Override
@@ -29,18 +41,30 @@ public class EditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_activity);
 
+        buttonDone=(ImageButton)findViewById(R.id.image_button_done);
+        buttonBack=(ImageButton)findViewById(R.id.image_button_back);
+        //获得活动标题
+        editName=(EditText)findViewById(R.id.edit_name_text);
+        //获得活动备注
+        editRemark=(EditText)findViewById(R.id.edit_remark_text);
+        //还要获得活动时间传回主页面进行处理
+
         init();
         ItemArrayAdapter adapter=new ItemArrayAdapter(EditActivity.this,R.layout.edit_items,listEditItem);
         ListView listView=(ListView)findViewById(R.id.setting_item_list);
         listView.setAdapter(adapter);
+
+
+
+
     }
 
     private void init() {
         //在这里面设置Date、Period、Image、Stick四项到List中并显示
-        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history));
-        listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate));
-        listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery));
-        listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload));
+        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, " "));
+        listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate, " "));
+        listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery, " "));
+        listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload, " "));
     }
 
     private class EditItem {//在这里面设置方法对活动类进行设置，显示
@@ -57,9 +81,10 @@ public class EditActivity extends AppCompatActivity {
         private String Item;//项名称
         private int ItemIcon;//项图标id
 
-        private EditItem(String item,int icon){
+        private EditItem(String item,int icon, String description){
             this.setItem(item);
             this.setItemIcon(icon);
+            this.setDescription(description);
         }
 
         public String getTitle() {
@@ -147,16 +172,58 @@ public class EditActivity extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            EditItem edititem=getItem(position);
-            View item = LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
-            ImageView img = (ImageView)item.findViewById(R.id.item_image_view);
-            TextView name = (TextView)item.findViewById(R.id.item_name);
-            TextView time = (TextView)item.findViewById(R.id.item_time);
-            img.setImageResource(edititem.getItemIcon());
-            name.setText(edititem.getItem());
-            time.setText("");
+            EditItem item=getItem(position);
+            View view=LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
+            ((ImageView)view.findViewById(R.id.item_image_view)).setImageResource(item.getItemIcon());
+            ((TextView)view.findViewById(R.id.item_name)).setText(item.getItem());
+            ((TextView)view.findViewById(R.id.item_description)).setText("");
+            TextView name=view.findViewById(R.id.item_name);
+            final String tmp=name.getText().toString();
+            TextView description=view.findViewById(R.id.item_description);
 
-            return item;
+            name.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View view){
+                    Toast.makeText(EditActivity.this, tmp, Toast.LENGTH_SHORT).show();
+                    switch(tmp){
+                        case "Date":
+                            //这里弹出时间选择窗口
+                            Calendar calendar = Calendar.getInstance();
+                            //create a datePickerDialog and then shoe it on your screen
+                            new DatePickerDialog(EditActivity.this,//binding the listener for your DatePickerDialog
+                                    new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                            Toast.makeText(EditActivity.this,"Year:" + year + " Month:" + month + " Day:" + dayOfMonth,Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                    , calendar.get(Calendar.YEAR)
+                                    , calendar.get(Calendar.MONTH)
+                                    , calendar.get(Calendar.DAY_OF_MONTH)).show();
+                            //create a datePickerDialog and then shoe it on your screen
+
+                            new TimePickerDialog(EditActivity.this,
+                                    new TimePickerDialog.OnTimeSetListener() {
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                            Toast.makeText(EditActivity.this,"Hour:" + hourOfDay + " Minute:" + minute ,Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                    , calendar.get(Calendar.HOUR_OF_DAY)
+                                    , calendar.get(Calendar.MINUTE)
+                                    , true).show();
+
+                        case "Period":
+                            //这里弹出设定周期的窗口
+                        case "Image":
+                            //这里转到设定图片的逻辑
+                        case "Stick":
+                            //这里转到置顶逻辑
+                    }
+                }
+            });
+
+            return view;
         }
     }
 }
