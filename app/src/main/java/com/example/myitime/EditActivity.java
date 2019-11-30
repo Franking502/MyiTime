@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -172,14 +174,14 @@ public class EditActivity extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            EditItem item=getItem(position);
+            final EditItem item=getItem(position);
             View view=LayoutInflater.from(getContext()).inflate(resourceId,parent,false);
             ((ImageView)view.findViewById(R.id.item_image_view)).setImageResource(item.getItemIcon());
             ((TextView)view.findViewById(R.id.item_name)).setText(item.getItem());
             ((TextView)view.findViewById(R.id.item_description)).setText("");
             TextView name=view.findViewById(R.id.item_name);
             final String tmp=name.getText().toString();
-            TextView description=view.findViewById(R.id.item_description);
+            final TextView description=view.findViewById(R.id.item_description);
 
             name.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View view){
@@ -188,30 +190,23 @@ public class EditActivity extends AppCompatActivity {
                         case "Date":
                             //这里弹出时间选择窗口
                             Calendar calendar = Calendar.getInstance();
+                            final int[] done = {0};
                             //create a datePickerDialog and then shoe it on your screen
                             new DatePickerDialog(EditActivity.this,//binding the listener for your DatePickerDialog
-                                    new DatePickerDialog.OnDateSetListener() {
-                                        @Override
-                                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                            Toast.makeText(EditActivity.this,"Year:" + year + " Month:" + month + " Day:" + dayOfMonth,Toast.LENGTH_SHORT).show();
-
-                                        }
+                                new DatePickerDialog.OnDateSetListener() {
+                                    @Override
+                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                        Toast.makeText(EditActivity.this,"Year:" + year + " Month:" + month + " Date:" + dayOfMonth,Toast.LENGTH_SHORT).show();
+                                        item.setYear(year);
+                                        item.setMonth(month);
+                                        item.setDate(dayOfMonth);
+                                        description.setText(item.getYear()+"/"+item.getMonth()+"/"+item.getDate());
                                     }
-                                    , calendar.get(Calendar.YEAR)
-                                    , calendar.get(Calendar.MONTH)
-                                    , calendar.get(Calendar.DAY_OF_MONTH)).show();
-                            //create a datePickerDialog and then shoe it on your screen
+                                }
+                                , calendar.get(Calendar.YEAR)
+                                , calendar.get(Calendar.MONTH)
+                                , calendar.get(Calendar.DAY_OF_MONTH)).show();
 
-                            new TimePickerDialog(EditActivity.this,
-                                    new TimePickerDialog.OnTimeSetListener() {
-                                        @Override
-                                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                            Toast.makeText(EditActivity.this,"Hour:" + hourOfDay + " Minute:" + minute ,Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                    , calendar.get(Calendar.HOUR_OF_DAY)
-                                    , calendar.get(Calendar.MINUTE)
-                                    , true).show();
 
                         case "Period":
                             //这里弹出设定周期的窗口
