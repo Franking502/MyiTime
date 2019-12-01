@@ -4,12 +4,22 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +28,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -25,8 +36,10 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
@@ -63,10 +76,10 @@ public class EditActivity extends AppCompatActivity {
 
     private void init() {
         //在这里面设置Date、Period、Image、Stick四项到List中并显示
-        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, " "));
-        listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate, " "));
-        listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery, " "));
-        listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload, " "));
+        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, " ", 0));
+        listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate, " ", 1));
+        listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery, " ", 2));
+        listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload, " ", 3));
     }
 
     private class EditItem {//在这里面设置方法对活动类进行设置，显示
@@ -77,17 +90,23 @@ public class EditActivity extends AppCompatActivity {
         private int month;//事件月份
         private int date;//事件日期
         private int hour;//事件时
-
         private int minute;//事件分
+
+
+        private String period;//事件周期
         //不设秒，默认0秒
         private String Item;//项名称
         private int ItemIcon;//项图标id
 
-        private EditItem(String item,int icon, String description){
+        private EditItem(String item,int icon, String description, int index){
             this.setItem(item);
             this.setItemIcon(icon);
             this.setDescription(description);
         }
+
+        public String getPeriod() { return period; }
+
+        public void setPeriod(String period) { this.period = period; }
 
         public String getTitle() {
             return Title;
@@ -183,41 +202,61 @@ public class EditActivity extends AppCompatActivity {
             final String tmp=name.getText().toString();
             final TextView description=view.findViewById(R.id.item_description);
 
-            name.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View view){
+            name.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
                     Toast.makeText(EditActivity.this, tmp, Toast.LENGTH_SHORT).show();
-                    switch(tmp){
+                    switch (tmp) {
                         case "Date":
                             //这里弹出时间选择窗口
-                            Calendar calendar = Calendar.getInstance();
-                            final int[] done = {0};
-                            //create a datePickerDialog and then shoe it on your screen
-                            new DatePickerDialog(EditActivity.this,//binding the listener for your DatePickerDialog
-                                new DatePickerDialog.OnDateSetListener() {
-                                    @Override
-                                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                        Toast.makeText(EditActivity.this,"Year:" + year + " Month:" + month + " Date:" + dayOfMonth,Toast.LENGTH_SHORT).show();
-                                        item.setYear(year);
-                                        item.setMonth(month);
-                                        item.setDate(dayOfMonth);
-                                        description.setText(item.getYear()+"/"+item.getMonth()+"/"+item.getDate());
-                                    }
+                            AlertDialog.Builder localBuilder = new AlertDialog.Builder(EditActivity.this);
+                            localBuilder.setTitle("选择时间").setIcon(item.getItemIcon());
+                            //
+                            final LinearLayout layout_alert = (LinearLayout) getLayoutInflater().inflate(R.layout.layout_dataselect, null);
+                            localBuilder.setView(layout_alert);
+                            localBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt) {
+                                    DatePicker datepicker1 = (DatePicker) layout_alert.findViewById(R.id.datepicker1);
+                                    int year = datepicker1.getYear();
+                                    int month = datepicker1.getMonth() + 1;
+                                    int date = datepicker1.getDayOfMonth();
+                                    item.setYear(year);
+                                    item.setMonth(month);
+                                    item.setDate(date);
+                                    item.setDescription(Integer.toString(year) + '-' + month + '-' + date);//string加int则默认将int转string
+                                    description.setText(Integer.toString(year) + '-' + month + '-' + date);
                                 }
-                                , calendar.get(Calendar.YEAR)
-                                , calendar.get(Calendar.MONTH)
-                                , calendar.get(Calendar.DAY_OF_MONTH)).show();
+                            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface paramAnonymousDialogInterface, int paramAnonymousInt) {
 
+                                }
+                            }).create().show();
 
                         case "Period":
-                            //这里弹出设定周期的窗口
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(EditActivity.this);
+                            dialog.setTitle("活动周期");
+                            final String[] period = new String[]{"周", "月", "年", "不重复"};
+                            dialog.setItems(period, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    item.setPeriod(period[which]);
+                                    description.setText(period[which]);
+                                }
+                            });
+                            dialog.show();
+
                         case "Image":
                             //这里转到设定图片的逻辑
+
+
+                            break;
                         case "Stick":
                             //这里转到置顶逻辑
+                            break;
                     }
                 }
-            });
 
+
+            });
             return view;
         }
     }
