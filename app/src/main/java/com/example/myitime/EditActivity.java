@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +26,14 @@ import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
 
-    ListView editList;
     private List<EditItem> listEditItem = new ArrayList<EditItem>();
     private ImageButton buttonDone,buttonBack;
     private EditText editName,editRemark;
+    private String Title;//活动名称
+    private String Description;//活动描述
+    private int year;//事件年份
+    private int month;//事件月份
+    private int date;//事件日期
 
     //每次打开这个页面都要初始化list，添加日期、重复、图片、置顶四个功能
     @Override
@@ -37,7 +42,10 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.edit_activity);
 
         buttonDone=(ImageButton)findViewById(R.id.image_button_done);
+        buttonDone.setOnClickListener(new Affirm());
         buttonBack=(ImageButton)findViewById(R.id.image_button_back);
+        buttonBack.setOnClickListener(new Back());
+
         //获得活动标题
         editName=(EditText)findViewById(R.id.edit_name_text);
         //获得活动备注
@@ -45,13 +53,33 @@ public class EditActivity extends AppCompatActivity {
         //还要获得活动时间传回主页面进行处理
 
         init();
-        ItemArrayAdapter adapter=new ItemArrayAdapter(EditActivity.this,R.layout.edit_items,listEditItem);
+        final ItemArrayAdapter adapter=new ItemArrayAdapter(EditActivity.this,R.layout.edit_items,listEditItem);
         ListView listView=(ListView)findViewById(R.id.setting_item_list);
         listView.setAdapter(adapter);
 
 
+    }
+    class Affirm implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            //点击确认后将该页面上设置的信息传回主页面
+            Intent intent=new Intent();
+            intent.putExtra("title",editName.getText().toString());
+            intent.putExtra("year",listEditItem.get(0).getYear());
+            intent.putExtra("month",listEditItem.get(0).getMonth());
+            intent.putExtra("date",listEditItem.get(0).getDate());
+            intent.putExtra("image",listEditItem.get(2).getImage());
+            intent.putExtra("stick",listEditItem.get(3).isStick());
 
-
+            setResult(RESULT_OK,intent);
+            EditActivity.this.finish();
+        }
+    }
+    class Back implements View.OnClickListener{
+        public void onClick(View v){
+            setResult(RESULT_CANCELED);
+            EditActivity.this.finish();
+        }
     }
 
     private void init() {
@@ -69,23 +97,29 @@ public class EditActivity extends AppCompatActivity {
         private int year;//事件年份
         private int month;//事件月份
         private int date;//事件日期
-        private int hour;//事件时
-        private int minute;//事件分
 
+        private int image;//事件图片
 
         private String period;//事件周期
         //不设秒，默认0秒
         private String Item;//项名称
         private int ItemIcon;//项图标id
-
-
-
         private boolean stick;//是否置顶
+
+
 
         private EditItem(String item,int icon, String description){
             this.setItem(item);
             this.setItemIcon(icon);
             this.setDescription(description);
+        }
+
+        public int getImage() {
+            return image;
+        }
+
+        public void setImage(int image) {
+            this.image = image;
         }
 
         public String getPeriod() { return period; }
@@ -139,22 +173,6 @@ public class EditActivity extends AppCompatActivity {
             this.date = date;
         }
 
-        public int getHour() {
-            return hour;
-        }
-
-        public void setHour(int hour) {
-            this.hour = hour;
-        }
-
-        public int getMinute() {
-            return minute;
-        }
-
-        public void setMinute(int minute) {
-            this.minute = minute;
-        }
-
         public String getItem() {
             return Item;
         }
@@ -192,7 +210,6 @@ public class EditActivity extends AppCompatActivity {
             TextView name=view.findViewById(R.id.item_name);
             final String tmp=name.getText().toString();
             final TextView description=view.findViewById(R.id.item_description);
-            final ImageView itemicon=view.findViewById(R.id.item_image_view);
 
             name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
@@ -250,25 +267,24 @@ public class EditActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     switch(which){
                                         case 0:
-                                            item.setItemIcon(R.drawable.pic1);
-                                            itemicon.setImageResource(R.drawable.pic1);
+                                            item.setImage(R.drawable.pic1);
                                             Toast.makeText(EditActivity.this,"pic1",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 1:
-                                            item.setItemIcon(R.drawable.pic2);
-                                            itemicon.setImageResource(R.drawable.pic2);
+                                            item.setImage(R.drawable.pic2);
+                                            Toast.makeText(EditActivity.this,"pic2",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 2:
-                                            item.setItemIcon(R.drawable.pic3);
-                                            itemicon.setImageResource(R.drawable.pic3);
+                                            item.setImage(R.drawable.pic3);
+                                            Toast.makeText(EditActivity.this,"pic3",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 3:
-                                            item.setItemIcon(R.drawable.pic4);
-                                            itemicon.setImageResource(R.drawable.pic4);
+                                            item.setImage(R.drawable.pic4);
+                                            Toast.makeText(EditActivity.this,"pic4",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 4:
-                                            item.setItemIcon(R.drawable.pic5);
-                                            itemicon.setImageResource(R.drawable.pic5);
+                                            item.setImage(R.drawable.pic5);
+                                            Toast.makeText(EditActivity.this,"pic5",Toast.LENGTH_SHORT).show();
                                             break;
                                         default:
                                     }
@@ -288,7 +304,7 @@ public class EditActivity extends AppCompatActivity {
                             radioDialog.create().show();
                             break;
                         case "Stick":
-                            //这里转到设定图片的逻辑
+                            //这里转到设定置顶的逻辑
                             final String top[] = new String[]{"是","否"};
 
                             AlertDialog.Builder stickdiolog = new AlertDialog.Builder(EditActivity.this);

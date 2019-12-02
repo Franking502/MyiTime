@@ -81,8 +81,11 @@ public class Item {
         CoverResourceId = coverResourceId;
     }
 
-    public Item(String title,int icon){
+    public Item(String title,int icon,int year,int month,int date){
         setTitle(title);
         setCoverResourceId(icon);
+        setYear(year);
+        setMonth(month);
+        setDate(date);
     }
 }

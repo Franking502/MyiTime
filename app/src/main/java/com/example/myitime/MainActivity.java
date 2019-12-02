@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
     FloatingActionButton addButton;
+    ItemAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         init();
         listViewItems=this.findViewById(R.id.list_view_item);
 
-        ItemAdapter adapter = new ItemAdapter(
+        adapter = new ItemAdapter(
                 MainActivity.this, R.layout.list_view_item, listItem);
         listViewItems.setAdapter(adapter);
 
@@ -109,9 +110,25 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode){
             case NEW_ITEM_ADD:
                 if(resultCode == RESULT_OK){
-
+                    String title=data.getStringExtra("title");
+                    int year=data.getIntExtra("year",2019);
+                    int month=data.getIntExtra("month",1);
+                    int date=data.getIntExtra("date",1);
+                    int image=data.getIntExtra("image",R.drawable.pic1);
+                    boolean stick=data.getBooleanExtra("stick",false);
+                    if(stick==true){
+                        getListItem().add(0,new Item(title,image,year,month,date));
+                    }
+                    else{
+                        getListItem().add(listItem.size(),new Item(title,image,year,month,date));
+                    }
+                    adapter.notifyDataSetChanged();
                 }
         }
+    }
+
+    public List<Item> getListItem() {
+        return listItem;
     }
 
     @Override
@@ -127,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        listItem.add(new Item("test1",R.drawable.pic1));
-        listItem.add(new Item("test2",R.drawable.pic2));
+        //listItem.add(new Item("test1",R.drawable.pic1));
+        //listItem.add(new Item("test2",R.drawable.pic2));
     }
 
     class ItemAdapter extends ArrayAdapter<Item> {
@@ -147,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
             View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             ((ImageView) view.findViewById(R.id.item_image_view)).setImageResource(item.getCoverResourceId());
             ((TextView) view.findViewById(R.id.item_name)).setText(item.getTitle());
+            ((TextView)view.findViewById(R.id.item_description)).setText(Integer.toString(item.getYear())+'/'+Integer.toString(item.getMonth())+'/'+Integer.toString(item.getDate()));
             return view;
         }
     }
