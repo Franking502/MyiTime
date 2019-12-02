@@ -4,22 +4,10 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
-
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,15 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class EditActivity extends AppCompatActivity {
@@ -48,7 +29,6 @@ public class EditActivity extends AppCompatActivity {
     private List<EditItem> listEditItem = new ArrayList<EditItem>();
     private ImageButton buttonDone,buttonBack;
     private EditText editName,editRemark;
-
 
     //每次打开这个页面都要初始化list，添加日期、重复、图片、置顶四个功能
     @Override
@@ -76,10 +56,10 @@ public class EditActivity extends AppCompatActivity {
 
     private void init() {
         //在这里面设置Date、Period、Image、Stick四项到List中并显示
-        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, " ", 0));
-        listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate, " ", 1));
-        listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery, " ", 2));
-        listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload, " ", 3));
+        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, " "));
+        listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate, " "));
+        listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery, " "));
+        listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload, " "));
     }
 
     private class EditItem {//在这里面设置方法对活动类进行设置，显示
@@ -98,7 +78,11 @@ public class EditActivity extends AppCompatActivity {
         private String Item;//项名称
         private int ItemIcon;//项图标id
 
-        private EditItem(String item,int icon, String description, int index){
+
+
+        private boolean stick;//是否置顶
+
+        private EditItem(String item,int icon, String description){
             this.setItem(item);
             this.setItemIcon(icon);
             this.setDescription(description);
@@ -106,6 +90,13 @@ public class EditActivity extends AppCompatActivity {
 
         public String getPeriod() { return period; }
 
+        public boolean isStick() {
+            return stick;
+        }
+
+        public void setStick(boolean stick) {
+            this.stick = stick;
+        }
         public void setPeriod(String period) { this.period = period; }
 
         public String getTitle() {
@@ -201,6 +192,7 @@ public class EditActivity extends AppCompatActivity {
             TextView name=view.findViewById(R.id.item_name);
             final String tmp=name.getText().toString();
             final TextView description=view.findViewById(R.id.item_description);
+            final ImageView itemicon=view.findViewById(R.id.item_image_view);
 
             name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
@@ -230,27 +222,107 @@ public class EditActivity extends AppCompatActivity {
 
                                 }
                             }).create().show();
+                            break;
 
                         case "Period":
-                            AlertDialog.Builder dialog = new AlertDialog.Builder(EditActivity.this);
-                            dialog.setTitle("活动周期");
+                            AlertDialog.Builder dialog_period = new AlertDialog.Builder(EditActivity.this);
+                            dialog_period.setTitle("活动周期");
                             final String[] period = new String[]{"周", "月", "年", "不重复"};
-                            dialog.setItems(period, new DialogInterface.OnClickListener() {
+                            dialog_period.setItems(period, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     item.setPeriod(period[which]);
                                     description.setText(period[which]);
                                 }
                             });
-                            dialog.show();
+                            dialog_period.show();
+                            break;
 
                         case "Image":
                             //这里转到设定图片的逻辑
+                            final String radioItems[] = new String[]{"默认图片1","默认图片2","默认图片3","默认图片4","默认图片5"};
 
+                            AlertDialog.Builder radioDialog = new AlertDialog.Builder(EditActivity.this);
+                            radioDialog.setTitle("图片设置");
 
+                            radioDialog.setSingleChoiceItems(radioItems, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch(which){
+                                        case 0:
+                                            item.setItemIcon(R.drawable.pic1);
+                                            itemicon.setImageResource(R.drawable.pic1);
+                                            Toast.makeText(EditActivity.this,"pic1",Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 1:
+                                            item.setItemIcon(R.drawable.pic2);
+                                            itemicon.setImageResource(R.drawable.pic2);
+                                            break;
+                                        case 2:
+                                            item.setItemIcon(R.drawable.pic3);
+                                            itemicon.setImageResource(R.drawable.pic3);
+                                            break;
+                                        case 3:
+                                            item.setItemIcon(R.drawable.pic4);
+                                            itemicon.setImageResource(R.drawable.pic4);
+                                            break;
+                                        case 4:
+                                            item.setItemIcon(R.drawable.pic5);
+                                            itemicon.setImageResource(R.drawable.pic5);
+                                            break;
+                                        default:
+                                    }
+                                }
+                            });
+
+                            //设置按钮
+                            radioDialog.setPositiveButton("OK"
+                                    , new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            radioDialog.create().show();
                             break;
                         case "Stick":
-                            //这里转到置顶逻辑
+                            //这里转到设定图片的逻辑
+                            final String top[] = new String[]{"是","否"};
+
+                            AlertDialog.Builder stickdiolog = new AlertDialog.Builder(EditActivity.this);
+                            stickdiolog.setTitle("是否置顶");
+
+                            stickdiolog.setSingleChoiceItems(top, 0, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch(which){
+                                        case 0:
+                                            item.setStick(true);
+                                            item.setDescription("置顶");
+                                            Toast.makeText(EditActivity.this,"置顶",Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 1:
+                                            item.setStick(false);
+                                            Toast.makeText(EditActivity.this,"取消置顶",Toast.LENGTH_SHORT).show();
+                                            item.setDescription("");
+                                            break;
+                                        default:
+                                    }
+                                }
+                            });
+                            //设置按钮
+                            stickdiolog.setPositiveButton("OK"
+                                    , new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            stickdiolog.create().show();
                             break;
                     }
                 }
