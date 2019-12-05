@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,9 +28,12 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_ITEM_ADD = 901;
+    public static final int ITEM_EDIT = 902;
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        init();
         listViewItems=this.findViewById(R.id.list_view_item);
 
         adapter = new ItemAdapter(
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //设置floatbutton的功能
-        addButton=(FloatingActionButton) findViewById(R.id.floating_action_button);
+       /* addButton=(FloatingActionButton) findViewById(R.id.floating_action_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent=new Intent(MainActivity.this,EditActivity.class);
                 startActivityForResult(intent, NEW_ITEM_ADD);
             }
-        });
+        });*/
     }
 
     @Override
@@ -143,11 +146,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void init() {
-        //listItem.add(new Item("test1",R.drawable.pic1));
-        //listItem.add(new Item("test2",R.drawable.pic2));
-    }
-
     class ItemAdapter extends ArrayAdapter<Item> {
 
         private int resourceId;
@@ -160,12 +158,37 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Item item = getItem(position);//获取当前项的实例
+            final int pos=position;
+            final Item item = getItem(position);//获取当前项的实例
             View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             ((ImageView) view.findViewById(R.id.item_image_view)).setImageResource(item.getCoverResourceId());
             ((TextView) view.findViewById(R.id.item_name)).setText(item.getTitle());
-            ((TextView)view.findViewById(R.id.item_description)).setText(Integer.toString(item.getYear())+'/'+Integer.toString(item.getMonth())+'/'+Integer.toString(item.getDate()));
+            ((TextView) view.findViewById(R.id.item_description)).setText(Integer.toString(item.getYear())+'年'+Integer.toString(item.getMonth())+'月'+Integer.toString(item.getDate())+'日');
+
+            view.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View view){
+                    //Item item=listItem.get(position);
+                    //跳转到详情页面
+                    //传入事件标题、事件时间
+                    Intent intent=new Intent(MainActivity.this,DetailActivity.class);
+                    intent.putExtra("title",item.getTitle());
+                    intent.putExtra("year",item.getYear());
+                    intent.putExtra("month",item.getMonth());
+                    intent.putExtra("date",item.getDate());
+                    intent.putExtra("image",item.getCoverResourceId());
+                    intent.putExtra("position",pos);
+                    startActivityForResult(intent, ITEM_EDIT);
+                }
+            });
+            listViewItems.setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
+
             return view;
         }
     }
+    public void OnButtonClick(View v) {
+        //这里跳转到新建页面活动
+        Intent intent=new Intent(MainActivity.this,EditActivity.class);
+        startActivityForResult(intent, NEW_ITEM_ADD);
+    }
+
 }

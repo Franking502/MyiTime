@@ -34,6 +34,7 @@ public class EditActivity extends AppCompatActivity {
     private int year;//事件年份
     private int month;//事件月份
     private int date;//事件日期
+    private ImageView Backgroundimg;
 
     //每次打开这个页面都要初始化list，添加日期、重复、图片、置顶四个功能
     @Override
@@ -51,6 +52,8 @@ public class EditActivity extends AppCompatActivity {
         //获得活动备注
         editRemark=(EditText)findViewById(R.id.edit_remark_text);
         //还要获得活动时间传回主页面进行处理
+
+        Backgroundimg=(ImageView)findViewById(R.id.back_ground_image_view);
 
         init();
         final ItemArrayAdapter adapter=new ItemArrayAdapter(EditActivity.this,R.layout.edit_items,listEditItem);
@@ -268,22 +271,27 @@ public class EditActivity extends AppCompatActivity {
                                     switch(which){
                                         case 0:
                                             item.setImage(R.drawable.pic1);
+                                            Backgroundimg.setImageResource(R.drawable.pic1);
                                             Toast.makeText(EditActivity.this,"pic1",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 1:
                                             item.setImage(R.drawable.pic2);
+                                            Backgroundimg.setImageResource(R.drawable.pic2);
                                             Toast.makeText(EditActivity.this,"pic2",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 2:
                                             item.setImage(R.drawable.pic3);
+                                            Backgroundimg.setImageResource(R.drawable.pic3);
                                             Toast.makeText(EditActivity.this,"pic3",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 3:
                                             item.setImage(R.drawable.pic4);
+                                            Backgroundimg.setImageResource(R.drawable.pic4);
                                             Toast.makeText(EditActivity.this,"pic4",Toast.LENGTH_SHORT).show();
                                             break;
                                         case 4:
                                             item.setImage(R.drawable.pic5);
+                                            Backgroundimg.setImageResource(R.drawable.pic5);
                                             Toast.makeText(EditActivity.this,"pic5",Toast.LENGTH_SHORT).show();
                                             break;
                                         default:

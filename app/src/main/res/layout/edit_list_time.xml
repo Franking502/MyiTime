@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    card_view:cardBackgroundColor="@color/cardview_light_background"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="3dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <FrameLayout
+        android:layout_width="400dp"
+        android:layout_height="120dp">
+
+        <ImageView
+            android:id="@+id/item_image_view"
+            android:layout_width="180dp"
+            android:layout_height="112.5dp"
+            android:translationX="5dp"
+            android:translationY="4dp" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="75dp"
+            android:orientation="vertical"
+            android:translationX="190dp"
+            android:translationY="30dp">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ItemName"
+                android:textColor="@android:color/black"
+                android:textSize="20dp"
+                android:translationX="5dp"
+                android:translationY="10dp" />
+
+            <TextView
+                android:id="@+id/item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:translationY="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="112.5dp"
+            android:orientation="vertical"
+            android:translationX="5dp"
+            android:translationY="4dp">
+
+            <TextView
+                android:id="@+id/text_view_lefttime"
+                android:layout_width="180dp"
+                android:layout_height="match_parent"
+                android:background="#80ffffff"
+                android:gravity="center"
+                android:text="TextView"
+                android:textStyle="bold"
+                android:translationX="0dp"
+                android:translationY="0dp" />
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.cardview.widget.CardView>
