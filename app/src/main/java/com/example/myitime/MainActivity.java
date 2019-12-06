@@ -41,7 +41,7 @@ import static android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS;
 public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_ITEM_ADD = 901;
-    public static final int ITEM_EDIT = 902;
+    public static final int ITEM_DETAIL = 902;
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("date",item.getDate());
                     intent.putExtra("image",item.getCoverResourceId());
                     intent.putExtra("position",pos);
-                    startActivityForResult(intent, ITEM_EDIT);
+                    startActivityForResult(intent, ITEM_DETAIL);
                 }
             });
             listViewItems.setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnButtonClick(View v) {
         //这里跳转到新建页面活动
-        Intent intent=new Intent(MainActivity.this,EditActivity.class);
+        Intent intent=new Intent(MainActivity.this, AddActivity.class);
         startActivityForResult(intent, NEW_ITEM_ADD);
     }
 

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import java.util.TimerTask;
 public class DetailActivity extends AppCompatActivity {
 
     ImageButton editButton, deletButton;
-    public static final int ITEM_EDIT = 902;
+    public static final int ITEM_EDIT = 903;
     private String title;
     private int year;
     private int month;
@@ -34,6 +35,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView titleText;
     TextView setTime;
     TextView mDays_Tv, mHours_Tv, mMinutes_Tv, mSeconds_Tv;
+    public static final int ITEM_DETAIL = 902;
 
     //下面的具体时间通过系统时间获得，现在先初始化做倒计时
     Calendar calendar = Calendar.getInstance();
@@ -72,6 +74,9 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        editButton=(ImageButton)findViewById(R.id.edit_image_button);//编辑按钮
+        deletButton=(ImageButton)findViewById(R.id.delet_image_button);//删除按钮
 
         backGround=(ImageView)findViewById(R.id.image_back_ground);
         titleText=(TextView)findViewById(R.id.name_text_view);
@@ -114,6 +119,27 @@ public class DetailActivity extends AppCompatActivity {
         }
         mDay = (d1.getTime()-d2.getTime())/(60*60*1000*24);
         startRun();
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到编辑页面
+                Intent intent=new Intent(DetailActivity.this,EditActivity.class);
+                intent.putExtra("title",titleText.getText());
+                intent.putExtra("year",year);
+                intent.putExtra("month",month);
+                intent.putExtra("date",date);
+                intent.putExtra("image",image);
+                startActivityForResult(intent, ITEM_EDIT);
+            }
+        });
+
+        deletButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void startRun() {
