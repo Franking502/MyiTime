@@ -83,7 +83,6 @@ public class DetailActivity extends AppCompatActivity {
         mMinutes_Tv = (TextView) findViewById(R.id.minute_left);
         mSeconds_Tv = (TextView) findViewById(R.id.second_left);
 
-        Log.i(DetailActivity.ACTIVITY_SERVICE, "This is Information");
         title=getIntent().getStringExtra("title");
         titleText.setText(title);
         year=getIntent().getIntExtra("year",2019);
