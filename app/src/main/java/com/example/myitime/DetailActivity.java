@@ -98,10 +98,9 @@ public class DetailActivity extends AppCompatActivity {
         mSecond=60 - calendar.get(Calendar.SECOND);
 
         //获取还有多少天
-        String s1="2016-1-2";
-        String s2="2016-1-1";
+        String s1= String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date);
+        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH))+'-'+String.valueOf(calendar.get(Calendar.DATE));
         DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar=new GregorianCalendar();
         Date d1= null;
         try {
             d1 = df.parse(s1);
@@ -157,12 +156,5 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode){
-            case ITEM_EDIT:
 
-        }
-    }
 }

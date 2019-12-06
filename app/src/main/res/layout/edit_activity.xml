@@ -9,7 +9,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/edit_head_cardview"
         android:layout_width="409dp"
-        android:layout_height="250dp"
+        android:layout_height="220dp"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
         app:cardBackgroundColor="@color/colorPrimary"
@@ -31,7 +31,25 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:translationX="90dp"
-            android:translationY="100dp" />
+            android:translationY="90dp" />
+
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题"
+            android:textSize="18sp"
+            android:translationX="75dp"
+            android:translationY="65dp" />
+
+        <TextView
+            android:id="@+id/text_view_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备注"
+            android:textSize="18sp"
+            android:translationX="75dp"
+            android:translationY="145dp" />
 
         <EditText
             android:id="@+id/edit_remark_text"
@@ -41,25 +59,7 @@
             android:inputType="textPersonName"
             android:text="Name"
             android:translationX="90dp"
-            android:translationY="180dp" />
-
-        <TextView
-            android:id="@+id/text_view_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="标题"
-            android:textSize="18sp"
-            android:translationX="75dp"
-            android:translationY="75dp" />
-
-        <TextView
-            android:id="@+id/text_view_remark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="备注"
-            android:textSize="18sp"
-            android:translationX="75dp"
-            android:translationY="155dp" />
+            android:translationY="170dp" />
 
         <ImageButton
             android:id="@+id/image_button_back"
@@ -74,7 +74,7 @@
             android:id="@+id/image_button_done"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@color/colorPrimary"
+            android:background="@android:color/transparent"
             android:scaleType="centerInside"
             android:translationX="355dp"
             android:translationY="21dp"
@@ -85,7 +85,7 @@
     <ListView
         android:id="@+id/setting_item_list"
         android:layout_width="wrap_content"
-        android:layout_height="298dp"
+        android:layout_height="0dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"

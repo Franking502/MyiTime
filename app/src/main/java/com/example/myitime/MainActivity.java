@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     FloatingActionButton addButton;
     ItemAdapter adapter;
+    TextView TimeOnPic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
         NavigationView navView=(NavigationView)findViewById(R.id.nav_view); //nav_view是drawer中的内容
         ActionBar actionBar=getSupportActionBar();
+
+        //下面处理首页图片上的时间显示
+        TimeOnPic=findViewById(R.id.text_view_lefttime);
+
         //下面逐个处理侧拉菜单中的各个选项：
         navView.setCheckedItem(R.id.nav_count);//设置默认选项为计时
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -95,16 +100,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_sort_by_size);
         }
 
-        //设置floatbutton的功能
-       /* addButton=(FloatingActionButton) findViewById(R.id.floating_action_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //这里跳转到新建页面活动
-                Intent intent=new Intent(MainActivity.this,EditActivity.class);
-                startActivityForResult(intent, NEW_ITEM_ADD);
-            }
-        });*/
+
     }
 
     @Override
