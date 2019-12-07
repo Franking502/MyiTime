@@ -23,18 +23,20 @@ import java.util.TimerTask;
 
 public class DetailActivity extends AppCompatActivity {
 
-    ImageButton editButton, deletButton;
+    ImageButton editButton, deletButton, backButton;
     public static final int ITEM_EDIT = 903;
+    public static final int ITEM_DEL = 904;
     private String title;
     private int year;
     private int month;
     private int date;
     private int image;
+    private int index;
     private Timer mTimer;
     ImageView backGround;
     TextView titleText;
     TextView setTime;
-    TextView mDays_Tv, mHours_Tv, mMinutes_Tv, mSeconds_Tv;
+    TextView mDays_Tv, mHours_Tv, mMinutes_Tv, mSeconds_Tv,remainText;
     public static final int ITEM_DETAIL = 902;
 
     //下面的具体时间通过系统时间获得，现在先初始化做倒计时
@@ -48,12 +50,18 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            long mday=0;
             if (msg.what == 1) {
                 computeTime();
-                mDays_Tv.setText(mDay+"");//天数不用补位
+                if(mDay<0){
+                    mday=-mDay;
+                    remainText.setText("已过");
+                }
+                mDays_Tv.setText(mday+"");//天数不用补位
                 mHours_Tv.setText(getTv(mHour));
                 mMinutes_Tv.setText(getTv(mMin));
                 mSeconds_Tv.setText(getTv(mSecond));
+
                 if (mSecond == 0 &&  mDay == 0 && mHour == 0 && mMin == 0 ) {
                     mTimer.cancel();
                 }
@@ -65,7 +73,7 @@ public class DetailActivity extends AppCompatActivity {
         if(l>=10){
             return l+"";
         }else{
-            return "0"+l;//小于10,,前面补位一个"0"
+            return "0"+l;//小于10,前面补位一个"0"
         }
     }
 
@@ -77,7 +85,7 @@ public class DetailActivity extends AppCompatActivity {
 
         editButton=(ImageButton)findViewById(R.id.edit_image_button);//编辑按钮
         deletButton=(ImageButton)findViewById(R.id.delet_image_button);//删除按钮
-
+        backButton=(ImageButton)findViewById(R.id.image_button_back);
         backGround=(ImageView)findViewById(R.id.image_back_ground);
         titleText=(TextView)findViewById(R.id.name_text_view);
         setTime=(TextView)findViewById(R.id.text_view_settime);
@@ -87,6 +95,7 @@ public class DetailActivity extends AppCompatActivity {
         mHours_Tv = (TextView) findViewById(R.id.hour_left);
         mMinutes_Tv = (TextView) findViewById(R.id.minute_left);
         mSeconds_Tv = (TextView) findViewById(R.id.second_left);
+        remainText=(TextView)findViewById(R.id.remain_text);
 
         title=getIntent().getStringExtra("title");
         titleText.setText(title);
@@ -94,6 +103,7 @@ public class DetailActivity extends AppCompatActivity {
         month=getIntent().getIntExtra("month",1);
         date=getIntent().getIntExtra("date",1);
         image=getIntent().getIntExtra("image",R.drawable.pic1);
+        index=getIntent().getIntExtra("position",0);
         backGround.setImageResource(image);
         setTime.setText(String.valueOf(year)+'年'+String.valueOf(month)+'月'+String.valueOf(date)+'日');
         //获取当前时间，剩余天数由下面获得，24-当前小时为剩余小时，60-当前分为剩余分，60-当前秒为剩余秒
@@ -138,7 +148,19 @@ public class DetailActivity extends AppCompatActivity {
         deletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //主界面点击时获取点击的时第几项index传到该页面
+                //在这里返回index和删除的result代码，在主页面执行删除
+                Intent intent=new Intent(DetailActivity.this,MainActivity.class);
+                intent.putExtra("position",index);
+                startActivityForResult(intent,ITEM_DEL);
+            }
+        });
 
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                DetailActivity.this.finish();
             }
         });
     }
@@ -170,13 +192,13 @@ public class DetailActivity extends AppCompatActivity {
                     // 倒计时结束
                     mHour = 23;
                     mDay--;
-                    if(mDay < 0){
+                    /*if(mDay < 0){
                         // 倒计时结束
                         mDay = 0;
                         mHour= 0;
                         mMin = 0;
                         mSecond = 0;
-                    }
+                    }*/
                 }
             }
         }

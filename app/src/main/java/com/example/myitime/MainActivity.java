@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_ITEM_ADD = 901;
     public static final int ITEM_DETAIL = 902;
+    public static final int ITEM_DEL = 904;
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
@@ -216,6 +217,13 @@ public class MainActivity extends AppCompatActivity {
                         getListItem().add(listItem.size(),new Item(title,image,year,month,date));
                     }
                     adapter.notifyDataSetChanged();
+                }
+            case ITEM_DEL:
+                int index=data.getIntExtra("position",-1);
+                if(index>=0){
+                    listItem.remove(index);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
                 }
         }
     }
