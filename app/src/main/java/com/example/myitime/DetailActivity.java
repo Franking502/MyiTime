@@ -124,6 +124,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转到编辑页面
+
                 Intent intent=new Intent(DetailActivity.this,EditActivity.class);
                 intent.putExtra("title",titleText.getText());
                 intent.putExtra("year",year);
@@ -180,6 +181,43 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
     }
+//获取从编辑页面传来的数据，修改year、month、date、backGround、title、setTime、
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(resultCode){
+
+            case RESULT_OK:
+                String title=data.getStringExtra("title");
+                this.year=data.getIntExtra("year",2019);
+                this.month=data.getIntExtra("month",1);
+                this.date=data.getIntExtra("date",1);
+                this.image=data.getIntExtra("image",R.drawable.pic1);
+                backGround.setImageResource(image);
+                boolean stick=data.getBooleanExtra("stick",false);
+                titleText.setText(title);
+                setTime.setText(String.valueOf(this.year)+'年'+String.valueOf(this.month)+'月'+String.valueOf(this.date)+'日');
+
+                //获取还有多少天
+                String s1= String.valueOf(this.year)+'-'+String.valueOf(this.month)+'-'+String.valueOf(this.date);
+                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH))+'-'+String.valueOf(calendar.get(Calendar.DATE));
+                DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+                Date d1= null;
+                try {
+                    d1 = df.parse(s1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Date d2= null;
+                try {
+                    d2 = df.parse(s2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                mDay = (d1.getTime()-d2.getTime())/(60*60*1000*24);
+                startRun();
+        }
+    }
 }
