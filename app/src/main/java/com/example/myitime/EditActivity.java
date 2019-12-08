@@ -72,6 +72,7 @@ public class EditActivity extends AppCompatActivity {
                 this.month=month;
                 this.date=date;
                 this.image=image;
+
                 Backgroundimg.setImageResource(image);
         }
     }

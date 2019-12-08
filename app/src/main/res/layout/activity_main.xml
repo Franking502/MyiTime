@@ -17,6 +17,7 @@
             layout="@layout/main_page"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
     </FrameLayout>
 
     <!--以下是drawerlayout中的内容-->

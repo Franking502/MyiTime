@@ -4,24 +4,34 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlertDialog;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Handler timeHandlerleft = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage (Message msg){
             super.handleMessage(msg);
             if (msg.what == 1) {//未过
                 computeTimeleft();
-                mDays_Tv.setText("还有"+mDay+"天"+mHour+"小时");//天数不用补位
-                if (mSecond == 0 &&  mDay == 0 && mHour == 0 && mMin == 0 ) {
+                mDays_Tv.setText("还有" + mDay + "天" + mHour + "小时");//天数不用补位
+                if (mSecond == 0 && mDay == 0 && mHour == 0 && mMin == 0) {
                     mTimer.cancel();
                 }
             }
@@ -80,14 +90,7 @@ public class MainActivity extends AppCompatActivity {
             if (msg.what == 0) {
                 computeTimepast();
                 mHour=Calendar.HOUR;
-                mDay=-mDay;
                 mDays_Tv.setText("已过"+mDay+"天"+mHour+"小时");//天数不用补位
-                /*mHours_Tv.setText(getTv(mHour));
-                mMinutes_Tv.setText(getTv(mMin));
-                mSeconds_Tv.setText(getTv(mSecond));
-                if (mSecond == 0 &&  mDay == 0 && mHour == 0 && mMin == 0 ) {
-                    mTimer.cancel();
-                }*/
             }
         }
     };
@@ -161,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if (menuItem.getTitle().equals("计时")) {
+                    mDrawerLayout.closeDrawer(Gravity.LEFT);
                     Toast.makeText(MainActivity.this,"计时",Toast.LENGTH_SHORT).show();
                 }
 
@@ -218,13 +222,19 @@ public class MainActivity extends AppCompatActivity {
                     }
                     adapter.notifyDataSetChanged();
                 }
-            case ITEM_DEL:
-                int index=data.getIntExtra("position",-1);
-                if(index>=0){
-                    listItem.remove(index);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(MainActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
+            break;
+            case ITEM_DETAIL:
+                //在这里接收是否删除的指示码
+                int ifdel=data.getIntExtra("ifdel",0);
+                if(ifdel == 1) {
+                    int index = data.getIntExtra("position", -1);
+                    if (index >= 0) {
+                        listItem.remove(index);
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(MainActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            break;
         }
     }
 
@@ -319,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24);
+                mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24);
                 startRun(0);
 
             }
@@ -340,8 +350,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24);
-                mDay=-mDay;
+                mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24);
                 startRun(1);
             }
 

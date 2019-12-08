@@ -24,6 +24,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.myitime.MainActivity.NEW_ITEM_ADD;
+
 public class AddActivity extends AppCompatActivity {
 
     private List<EditItem> listEditItem = new ArrayList<EditItem>();
@@ -73,14 +75,12 @@ public class AddActivity extends AppCompatActivity {
             intent.putExtra("date",listEditItem.get(0).getDate());
             intent.putExtra("image",listEditItem.get(2).getImage());
             intent.putExtra("stick",listEditItem.get(3).isStick());
-
             setResult(RESULT_OK,intent);
             AddActivity.this.finish();
         }
     }
     class Back implements View.OnClickListener{
         public void onClick(View v){
-            setResult(RESULT_CANCELED);
             AddActivity.this.finish();
         }
     }

@@ -152,14 +152,16 @@ public class DetailActivity extends AppCompatActivity {
                 //在这里返回index和删除的result代码，在主页面执行删除
                 Intent intent=new Intent(DetailActivity.this,MainActivity.class);
                 intent.putExtra("position",index);
-                startActivityForResult(intent,ITEM_DEL);
+                intent.putExtra("ifdel",1);
+                setResult(ITEM_DETAIL,intent);
+                DetailActivity.this.finish();
             }
         });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult(RESULT_CANCELED);
+                //setResult(RESULT_CANCELED);
                 DetailActivity.this.finish();
             }
         });
