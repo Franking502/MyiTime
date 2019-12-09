@@ -162,7 +162,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             break;
-
+            case RESULT_CANCELED:
+                break;
         }
     }
 

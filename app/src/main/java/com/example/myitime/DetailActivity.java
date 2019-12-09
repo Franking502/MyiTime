@@ -162,9 +162,9 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(DetailActivity.this,MainActivity.class);
-                intent.putExtra("position",index);
-                intent.putExtra("ifdel",0);
-                setResult(RESULT_CANCELED);
+                /*intent.putExtra("position",index);
+                intent.putExtra("ifdel",0);*/
+                setResult(RESULT_CANCELED,intent);
                 DetailActivity.this.finish();
             }
         });
