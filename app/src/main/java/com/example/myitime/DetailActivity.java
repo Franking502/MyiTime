@@ -161,7 +161,10 @@ public class DetailActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //setResult(RESULT_CANCELED);
+                Intent intent=new Intent(DetailActivity.this,MainActivity.class);
+                intent.putExtra("position",index);
+                intent.putExtra("ifdel",0);
+                setResult(RESULT_CANCELED);
                 DetailActivity.this.finish();
             }
         });

@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 
@@ -68,80 +69,6 @@ public class MainActivity extends AppCompatActivity {
     private long mHour;//小时,
     private long mMin;//分钟,
     private long mSecond;//秒
-
-    private Handler timeHandlerleft = new Handler() {
-        @Override
-        public void handleMessage (Message msg){
-            super.handleMessage(msg);
-            if (msg.what == 1) {//未过
-                computeTimeleft();
-                mDays_Tv.setText("还有" + mDay + "天" + mHour + "小时");//天数不用补位
-                if (mSecond == 0 && mDay == 0 && mHour == 0 && mMin == 0) {
-                    mTimer.cancel();
-                }
-            }
-        }
-    };
-
-    private Handler timeHandlerpassed = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 0) {
-                computeTimepast();
-                mHour=Calendar.HOUR;
-                mDays_Tv.setText("已过"+mDay+"天"+mHour+"小时");//天数不用补位
-            }
-        }
-    };
-
-    private void computeTimeleft() {
-        mSecond--;
-        if (mSecond < 0) {
-            mMin--;
-            mSecond = 59;
-            if (mMin < 0) {
-                mMin = 59;
-                mHour--;
-                if (mHour < 0) {
-                    // 倒计时结束
-                    mHour = 23;
-                    mDay--;
-                    if(mDay < 0){
-                        // 倒计时结束
-                        mDay = 0;
-                        mHour= 0;
-                        mMin = 0;
-                        mSecond = 0;
-                    }
-                }
-            }
-        }
-    }
-
-    private void computeTimepast() {
-        mSecond++;
-        if (mSecond > 60) {
-            mMin++;
-            mSecond = 0;
-            if (mMin > 60) {
-                mMin = 0;
-                mHour++;
-                if(mHour > 24){
-                    mHour = 0;
-                    mDay++;
-                }
-            }
-        }
-    }
-
-    private String getTv(long l){
-        if(l>=10){
-            return l+"";
-        }else{
-            return "0"+l;//小于10,,前面补位一个"0"
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             break;
+
         }
     }
 
@@ -257,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
     class ItemAdapter extends ArrayAdapter<Item> {
 
         private int resourceId;
+        int position;
 
         public ItemAdapter(Context context, int resource, List<Item> objects) {
             super(context, resource, objects);
@@ -267,13 +196,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final int pos=position;
+            this.position=position;
             final Item item = getItem(position);//获取当前项的实例
             View view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             ((ImageView) view.findViewById(R.id.item_image_view)).setImageResource(item.getCoverResourceId());
             ((TextView) view.findViewById(R.id.item_name)).setText(item.getTitle());
             ((TextView) view.findViewById(R.id.item_description)).setText(Integer.toString(item.getYear())+'年'+Integer.toString(item.getMonth())+'月'+Integer.toString(item.getDate())+'日');
-            mDays_Tv=view.findViewById(R.id.text_view_lefttime);
-            mTimer = new Timer();
+
             //下面处理首页图片上的时间显示
             TimeOnPic=view.findViewById(R.id.text_view_lefttime);
             int year=item.getYear();
@@ -329,9 +258,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24);
-                startRun(0);
-
+                mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24);
+                TimeOnPic.setText("已经过去"+String.valueOf(mDay));
             }
             else{
                 //日期未过，计算还有多少天
@@ -351,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24);
-                startRun(1);
+                TimeOnPic.setText("还有"+String.valueOf(mDay)+"天");
             }
 
             view.setOnClickListener(new View.OnClickListener(){
@@ -375,33 +303,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startRun(final int passed) {
-        //passed为0已过，为1未过
-        if(passed==1) {
-            TimerTask mTimerTask = new TimerTask() {
-
-                public void run() {
-                    Message message = Message.obtain();
-
-                    message.what = passed;
-                    timeHandlerleft.sendMessage(message);
-                }
-            };
-            mTimer.schedule(mTimerTask,0,1000);
-        }
-        if(passed==0) {
-            TimerTask mTimerTask = new TimerTask() {
-
-                public void run() {
-                    Message message = Message.obtain();
-
-                    message.what = passed;
-                    timeHandlerpassed.sendMessage(message);
-                }
-            };
-            mTimer.schedule(mTimerTask,0,1000);
-        }
-    }
 
     public void OnButtonClick(View v) {
         //这里跳转到新建页面活动
