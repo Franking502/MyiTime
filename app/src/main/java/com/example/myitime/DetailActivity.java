@@ -45,6 +45,7 @@ public class DetailActivity extends AppCompatActivity {
     private long mHour;//小时,
     private long mMin;//分钟,
     private long mSecond;//秒
+    private long setDay;// 天
 
     private Handler timeHandler = new Handler() {
         @Override
@@ -54,10 +55,9 @@ public class DetailActivity extends AppCompatActivity {
             if (msg.what == 1) {
                 computeTime();
                 if(mDay<0){
-                    mday=-mDay;
                     remainText.setText("已过");
+                    mDays_Tv.setText((-mDay)+"");//天数不用补位
                 }
-                mDays_Tv.setText(mday+"");//天数不用补位
                 mHours_Tv.setText(getTv(mHour));
                 mMinutes_Tv.setText(getTv(mMin));
                 mSeconds_Tv.setText(getTv(mSecond));
@@ -162,8 +162,13 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(DetailActivity.this,MainActivity.class);
-                /*intent.putExtra("position",index);
-                intent.putExtra("ifdel",0);*/
+                /*在这里获取当前剩余时间并返回*/
+                intent.putExtra("remain",remainText.getText());
+                intent.putExtra("leftday",mDay);
+                intent.putExtra("lefthour",mHour);
+                intent.putExtra("leftminute",mMin);
+                intent.putExtra("leftsecond",mSecond);
+                intent.putExtra("position",index);
                 setResult(RESULT_CANCELED,intent);
                 DetailActivity.this.finish();
             }

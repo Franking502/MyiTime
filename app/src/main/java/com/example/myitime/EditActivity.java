@@ -24,6 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class EditActivity extends AppCompatActivity {
     ImageButton buttonBack,buttonDone;
     EditText editName;
     ImageView Backgroundimg;
+    TextView texttimeset;
     private List<EditItem> listEditItem = new ArrayList<EditItem>();
 
     @Override
@@ -51,35 +54,24 @@ public class EditActivity extends AppCompatActivity {
         buttonDone.setOnClickListener(new EditActivity.Affirm());
         editName=(EditText)findViewById(R.id.edit_name_text);
         Backgroundimg=(ImageView)findViewById(R.id.back_ground_image_view);
+
+        String title=getIntent().getStringExtra("title");
+        editName.setText(title);
+        int year=getIntent().getIntExtra("year",0);
+        int month=getIntent().getIntExtra("month",0);
+        int date=getIntent().getIntExtra("date",0);
+        int image=getIntent().getIntExtra("image",R.drawable.pic1);
         init();
+        Backgroundimg.setImageResource(image);
+
         final ItemArrayAdapter adapter=new ItemArrayAdapter(EditActivity.this,R.layout.edit_items,listEditItem);
         ListView listView=(ListView)findViewById(R.id.setting_item_list);
         listView.setAdapter(adapter);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(resultCode){
-            case ITEM_EDIT:
-                String title=data.getStringExtra("title");
-                int year=data.getIntExtra("year",2019);
-                int month=data.getIntExtra("month",1);
-                int date=data.getIntExtra("date",1);
-                int image=data.getIntExtra("image",R.drawable.pic1);
-                editName.setText(title);
-                this.year=year;
-                this.month=month;
-                this.date=date;
-                this.image=image;
-
-                Backgroundimg.setImageResource(image);
-        }
-    }
-
     private void init() {
         //在这里面设置Date、Period、Image、Stick四项到List中并显示
-        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, " "));
+        listEditItem.add(new EditItem("Date",android.R.drawable.ic_menu_recent_history, String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date)));
         listEditItem.add(new EditItem("Period",android.R.drawable.ic_menu_rotate, " "));
         listEditItem.add(new EditItem("Image",android.R.drawable.ic_menu_gallery, " "));
         listEditItem.add(new EditItem("Stick",android.R.drawable.ic_menu_upload, " "));
@@ -94,7 +86,7 @@ public class EditActivity extends AppCompatActivity {
             intent.putExtra("year",listEditItem.get(0).getYear());
             intent.putExtra("month",listEditItem.get(0).getMonth());
             intent.putExtra("date",listEditItem.get(0).getDate());
-            intent.putExtra("image",listEditItem.get(2).getImage());
+            intent.putExtra("image",image);
             intent.putExtra("stick",listEditItem.get(3).isStick());
 
             setResult(RESULT_OK,intent);

@@ -163,7 +163,49 @@ public class MainActivity extends AppCompatActivity {
                 }
             break;
             case RESULT_CANCELED:
-                break;
+                //在这里接收剩余时间并进行设置
+                int leftday=data.getIntExtra("leftday",0);
+                int lefthour=data.getIntExtra("lefthour",0);
+                int leftminute=data.getIntExtra("leftminute",0);
+                int leftsecond=data.getIntExtra("leftsecond",0);
+                int position=data.getIntExtra("position",0);
+                String remaintext=data.getStringExtra("remain");
+                TextView timetext=listViewItems.getChildAt(position).findViewById(R.id.text_view_lefttime);
+                if(leftday>0){
+                    timetext.setText("还有"+leftday+"天");
+                }
+                else if(leftday==0){
+                    if(lefthour>0){
+                        timetext.setText("还有"+lefthour+"小时");
+                    }
+                    else{
+                        if(leftminute>0){
+                            timetext.setText("还有"+leftminute+"分钟");
+                        }
+                        else{
+                            timetext.setText("还有"+leftsecond+"秒");
+                        }
+                    }
+                }
+                else {
+                    if(-leftday>0){
+                        timetext.setText("已经"+(-leftday)+"天");
+                    }
+                    else if(-leftday==0){
+                        if(lefthour>0){
+                            timetext.setText("已经"+lefthour+"小时");
+                        }
+                        else{
+                            if(leftminute>0){
+                                timetext.setText("已经"+leftminute+"分钟");
+                            }
+                            else{
+                                timetext.setText("还有"+leftsecond+"秒");
+                                }
+                            }
+                        }
+                    }
+            break;
         }
     }
 
