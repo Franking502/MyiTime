@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             if(passed){
                 //日期已过，计算已过多少天
                 String s1= String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date);
-                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH))+'-'+String.valueOf(calendar.get(Calendar.DATE));
+                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
                 DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
                 Date d1= null;
                 try {
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
             else{
                 //日期未过，计算还有多少天
                 String s1= String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date);
-                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH))+'-'+String.valueOf(calendar.get(Calendar.DATE));
+                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
                 DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
                 Date d1= null;
                 try {
