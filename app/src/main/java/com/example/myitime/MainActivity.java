@@ -40,6 +40,8 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -169,8 +171,10 @@ public class MainActivity extends AppCompatActivity {
                 int leftminute=data.getIntExtra("leftminute",0);
                 int leftsecond=data.getIntExtra("leftsecond",0);
                 int position=data.getIntExtra("position",0);
-                String remaintext=data.getStringExtra("remain");
+                String setTime=data.getStringExtra("settime");
                 TextView timetext=listViewItems.getChildAt(position).findViewById(R.id.text_view_lefttime);
+                TextView setTimeText=listViewItems.getChildAt(position).findViewById(R.id.item_description);
+                setTimeText.setText(setTime);
                 if(leftday>0){
                     timetext.setText("还有"+leftday+"天");
                 }
@@ -253,7 +257,8 @@ public class MainActivity extends AppCompatActivity {
             int date=item.getDate();
             Calendar calendar = Calendar.getInstance();
             int yearpassed=year-calendar.get(Calendar.YEAR);
-            int monthpassed=month-calendar.get(Calendar.MONTH);
+            int s=calendar.get(Calendar.MONTH);
+            int monthpassed=month-calendar.get(Calendar.MONTH)-1;
             int daypssed=date-calendar.get(Calendar.DATE);
             boolean passed=false;//false表示还没过
             if(yearpassed<0){
@@ -301,8 +306,8 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24);
-                TimeOnPic.setText("已经过去"+String.valueOf(mDay));
+                mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24);
+                TimeOnPic.setText("已经过去"+String.valueOf(mDay)+"天");
             }
             else{
                 //日期未过，计算还有多少天

@@ -51,7 +51,6 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            long mday=0;
             if (msg.what == 1) {
                 computeTime();
                 if(mDay<0){
@@ -62,9 +61,6 @@ public class DetailActivity extends AppCompatActivity {
                 mMinutes_Tv.setText(getTv(mMin));
                 mSeconds_Tv.setText(getTv(mSecond));
 
-                if (mSecond == 0 &&  mDay == 0 && mHour == 0 && mMin == 0 ) {
-                    mTimer.cancel();
-                }
             }
         }
     };
@@ -113,7 +109,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //获取还有多少天
         String s1= String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date);
-        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH))+'-'+String.valueOf(calendar.get(Calendar.DATE));
+        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
         DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
         Date d1= null;
         try {
@@ -162,12 +158,12 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(DetailActivity.this,MainActivity.class);
-                /*在这里获取当前剩余时间并返回*/
-                intent.putExtra("remain",remainText.getText());
+                /*在这里获取当前剩余时间和设定的时间并返回*/
                 intent.putExtra("leftday",mDay);
                 intent.putExtra("lefthour",mHour);
                 intent.putExtra("leftminute",mMin);
                 intent.putExtra("leftsecond",mSecond);
+                intent.putExtra("settime",setTime.getText());
                 intent.putExtra("position",index);
                 setResult(RESULT_CANCELED,intent);
                 DetailActivity.this.finish();
@@ -191,24 +187,39 @@ public class DetailActivity extends AppCompatActivity {
      * 倒计时计算
      */
     private void computeTime() {
-        mSecond--;
-        if (mSecond < 0) {
-            mMin--;
-            mSecond = 59;
-            if (mMin < 0) {
-                mMin = 59;
-                mHour--;
-                if (mHour < 0) {
-                    // 倒计时结束
-                    mHour = 23;
-                    mDay--;
-                    /*if(mDay < 0){
+        //未过
+        if(mDay>=0) {
+            mSecond--;
+            if (mSecond < 0) {
+                mMin--;
+                mSecond = 59;
+                if (mMin < 0) {
+                    mMin = 59;
+                    mHour--;
+                    if (mHour < 0) {
                         // 倒计时结束
-                        mDay = 0;
-                        mHour= 0;
-                        mMin = 0;
-                        mSecond = 0;
-                    }*/
+                        mHour = 23;
+                        mDay--;
+
+                    }
+                }
+            }
+        }
+        //已过
+        else if(mDay<0){
+            mSecond++;
+            if (mSecond > 60) {
+                mMin++;
+                mSecond = 0;
+                if (mMin > 60) {
+                    mMin = 0;
+                    mHour++;
+                    if (mHour > 24) {
+                        // 倒计时结束
+                        mHour = 0;
+                        mDay++;
+
+                    }
                 }
             }
         }
@@ -234,7 +245,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 //获取还有多少天
                 String s1= String.valueOf(this.year)+'-'+String.valueOf(this.month)+'-'+String.valueOf(this.date);
-                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH))+'-'+String.valueOf(calendar.get(Calendar.DATE));
+                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
                 DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
                 Date d1= null;
                 try {
@@ -248,7 +259,7 @@ public class DetailActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay = (d1.getTime()-d2.getTime())/(60*60*1000*24);
+                this.mDay = (d1.getTime()-d2.getTime())/(60*60*1000*24);
                 startRun();
         }
     }
