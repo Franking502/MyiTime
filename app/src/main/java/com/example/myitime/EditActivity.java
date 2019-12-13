@@ -86,7 +86,7 @@ public class EditActivity extends AppCompatActivity {
             intent.putExtra("year",listEditItem.get(0).getYear());
             intent.putExtra("month",listEditItem.get(0).getMonth());
             intent.putExtra("date",listEditItem.get(0).getDate());
-            intent.putExtra("image",image);
+            intent.putExtra("image",listEditItem.get(2).getImage());
             intent.putExtra("stick",listEditItem.get(3).isStick());
 
             setResult(RESULT_OK,intent);
@@ -95,6 +95,15 @@ public class EditActivity extends AppCompatActivity {
     }
     class Back implements View.OnClickListener{
         public void onClick(View v){
+            //在这里要把原来的东西再传回detail界面！！！！！！！！！！！！
+            Intent intent=new Intent();
+            intent.putExtra("title",editName.getText().toString());
+            intent.putExtra("year",listEditItem.get(0).getYear());
+            intent.putExtra("month",listEditItem.get(0).getMonth());
+            intent.putExtra("date",listEditItem.get(0).getDate());
+            intent.putExtra("image",listEditItem.get(2).getImage());
+            intent.putExtra("stick",listEditItem.get(3).isStick());
+
             setResult(RESULT_CANCELED);
             EditActivity.this.finish();
         }

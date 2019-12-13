@@ -159,13 +159,17 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(DetailActivity.this,MainActivity.class);
                 /*在这里获取当前剩余时间和设定的时间并返回*/
+                intent.putExtra("back",111);
+                intent.putExtra("state",remainText.getText().toString());
                 intent.putExtra("leftday",mDay);
                 intent.putExtra("lefthour",mHour);
                 intent.putExtra("leftminute",mMin);
                 intent.putExtra("leftsecond",mSecond);
-                intent.putExtra("settime",setTime.getText());
+                intent.putExtra("settime",setTime.getText().toString());
                 intent.putExtra("position",index);
-                setResult(RESULT_CANCELED,intent);
+                //还要获取设定的图片！！！！！！！！！！！！！！！！！
+                intent.putExtra("image",image);
+                setResult(ITEM_DETAIL,intent);
                 DetailActivity.this.finish();
             }
         });
@@ -238,6 +242,8 @@ public class DetailActivity extends AppCompatActivity {
                 this.month=data.getIntExtra("month",1);
                 this.date=data.getIntExtra("date",1);
                 this.image=data.getIntExtra("image",R.drawable.pic1);
+                int pic = R.drawable.pic1;
+                int pic2 = this.image;
                 backGround.setImageResource(image);
                 boolean stick=data.getBooleanExtra("stick",false);
                 titleText.setText(title);

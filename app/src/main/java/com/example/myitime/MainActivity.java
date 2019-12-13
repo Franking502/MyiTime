@@ -162,8 +162,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             break;
             case ITEM_DETAIL:
-                //在这里接收是否删除的指示码
+                //在这里接收是否删除和是否是返回的指示码
                 int ifdel=data.getIntExtra("ifdel",0);
+                int ifback=data.getIntExtra("back",0);
                 if(ifdel == 1) {
                     int index = data.getIntExtra("position", -1);
                     if (index >= 0) {
@@ -172,18 +173,48 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "删除成功！", Toast.LENGTH_SHORT).show();
                     }
                 }
+                if(ifback==111){
+                    //返回处理，接收数据
+                    String remain=data.getStringExtra("state");
+                    long leftday=data.getLongExtra("leftday",0);
+                    long lefthour=data.getLongExtra("lefthour",0);
+                    long leftminute=data.getLongExtra("leftminute",0);
+                    long leftsecond=data.getLongExtra("leftsecond",0);
+                    String settime=data.getStringExtra("settime");
+                    int index=data.getIntExtra("position",0);
+                    //改变index位置上的数据！！！！
+                    TextView timetext=listViewItems.getChildAt(index).findViewById(R.id.text_view_lefttime);
+                    TextView setTimeText=listViewItems.getChildAt(index).findViewById(R.id.item_description);
+                    setTimeText.setText(settime);
+                    if(leftday!=0)
+                        timetext.setText(remain+leftday+"天");
+                    else{
+                        if(lefthour!=0)
+                            timetext.setText(remain+lefthour+"小时");
+                        else{
+                            if(leftminute!=0)
+                                timetext.setText(remain+leftminute+"分钟");
+                            else
+                                timetext.setText(remain+leftsecond+"秒");
+                        }
+                    }
+                }
             break;
             case RESULT_CANCELED:
                 //在这里接收剩余时间并进行设置
-                int leftday=data.getIntExtra("leftday",0);
-                int lefthour=data.getIntExtra("lefthour",0);
-                int leftminute=data.getIntExtra("leftminute",0);
-                int leftsecond=data.getIntExtra("leftsecond",0);
+                long leftday=data.getLongExtra("leftday",0);
+                long lefthour=data.getLongExtra("lefthour",0);
+                long leftminute=data.getLongExtra("leftminute",0);
+                long leftsecond=data.getLongExtra("leftsecond",0);
                 int position=data.getIntExtra("position",0);
+                int image=data.getIntExtra("image",0);
                 String setTime=data.getStringExtra("settime");
                 TextView timetext=listViewItems.getChildAt(position).findViewById(R.id.text_view_lefttime);
                 TextView setTimeText=listViewItems.getChildAt(position).findViewById(R.id.item_description);
                 setTimeText.setText(setTime);
+                //在这里设置相应位置上的item的图片！！
+                listItem.get(position).setCoverResourceId(image);
+                adapter.notifyDataSetChanged();
                 if(leftday>0){
                     timetext.setText("还有"+leftday+"天");
                 }
