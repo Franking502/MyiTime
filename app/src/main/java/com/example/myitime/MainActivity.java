@@ -182,10 +182,13 @@ public class MainActivity extends AppCompatActivity {
                     long leftsecond=data.getLongExtra("leftsecond",0);
                     String settime=data.getStringExtra("settime");
                     int index=data.getIntExtra("position",0);
+                    int image=data.getIntExtra("image",R.drawable.pic1);
                     //改变index位置上的数据！！！！
                     TextView timetext=listViewItems.getChildAt(index).findViewById(R.id.text_view_lefttime);
                     TextView setTimeText=listViewItems.getChildAt(index).findViewById(R.id.item_description);
                     setTimeText.setText(settime);
+                    ImageView imageview=listViewItems.getChildAt(index).findViewById(R.id.item_image_view);
+                    imageview.setImageResource(image);
                     if(leftday!=0)
                         timetext.setText(remain+leftday+"天");
                     else{
