@@ -266,7 +266,6 @@ public class MainActivity extends AppCompatActivity {
             int date=item.getDate();
             Calendar calendar = Calendar.getInstance();
             int yearpassed=year-calendar.get(Calendar.YEAR);
-            int s=calendar.get(Calendar.MONTH);
             int monthpassed=month-calendar.get(Calendar.MONTH)-1;
             int daypssed=date-calendar.get(Calendar.DATE);
             boolean passed=false;//false表示还没过
@@ -279,7 +278,8 @@ public class MainActivity extends AppCompatActivity {
                     passed=true;
                 }
                 else if(monthpassed==0){
-                    if(daypssed<0){
+                    if(daypssed<=0){
+                        //处于设定日期当天也算已过
                         passed=true;
                     }
 
@@ -315,8 +315,19 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24);
-                TimeOnPic.setText("已经过去"+String.valueOf(mDay)+"天");
+                if((mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24)) != 0){
+                    TimeOnPic.setText("已经过去"+String.valueOf(mDay)+"天");
+                }
+                else if(calendar.get(Calendar.HOUR_OF_DAY) != 0){
+                    //已过天数小于一天，显示已过小时数
+                    TimeOnPic.setText("已经过去"+String.valueOf(calendar.get(Calendar.HOUR_OF_DAY))+"小时");
+                }
+                else if(calendar.get(Calendar.MINUTE) != 0){
+                    TimeOnPic.setText("已经过去"+String.valueOf(calendar.get(Calendar.MINUTE))+"分钟");
+                }
+                else if(calendar.get(Calendar.SECOND) != 0){
+                    TimeOnPic.setText("已经过去"+String.valueOf(calendar.get(Calendar.SECOND))+"秒");
+                }
             }
             else{
                 //日期未过，计算还有多少天
@@ -335,8 +346,19 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24);
-                TimeOnPic.setText("还有"+String.valueOf(mDay)+"天");
+                if((mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24)) != 0){
+                    TimeOnPic.setText("还有"+String.valueOf(mDay)+"天");
+                }
+                else if(24-calendar.get(Calendar.HOUR_OF_DAY) != 0){
+                    //距离天数小于一天，显示距离小时数
+                    TimeOnPic.setText("还有"+String.valueOf(24-calendar.get(Calendar.HOUR_OF_DAY))+"小时");
+                }
+                else if(60-calendar.get(Calendar.MINUTE) != 0){
+                    TimeOnPic.setText("还有"+String.valueOf(60-calendar.get(Calendar.MINUTE))+"分钟");
+                }
+                else if(60-calendar.get(Calendar.SECOND) != 0){
+                    TimeOnPic.setText("还有"+String.valueOf(60-calendar.get(Calendar.SECOND))+"秒");
+                }
             }
 
             view.setOnClickListener(new View.OnClickListener(){
