@@ -1,6 +1,8 @@
 package com.example.myitime;
 
-public class Item {
+import java.io.Serializable;
+
+public class Item implements Serializable {
 
     private String Title;//活动名称
     private String Description;//活动描述

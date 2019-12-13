@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton addButton;
     ItemAdapter adapter;
     TextView TimeOnPic;
+    ItemSaver itemSaver;
 
     TextView mDays_Tv, mHours_Tv, mMinutes_Tv, mSeconds_Tv;
     private Timer mTimer;
@@ -73,10 +74,18 @@ public class MainActivity extends AppCompatActivity {
     private long mSecond;//秒
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        itemSaver.save();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        itemSaver=new ItemSaver(this);
+        listItem=itemSaver.load();
         listViewItems=this.findViewById(R.id.list_view_item);
 
         adapter = new ItemAdapter(
