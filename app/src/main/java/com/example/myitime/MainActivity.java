@@ -189,8 +189,12 @@ public class MainActivity extends AppCompatActivity {
                     setTimeText.setText(settime);
                     ImageView imageview=listViewItems.getChildAt(index).findViewById(R.id.item_image_view);
                     imageview.setImageResource(image);
-                    if(leftday!=0)
+                    if(leftday!=0){
+                        if(leftday<0){
+                            leftday=-leftday;
+                        }
                         timetext.setText(remain+leftday+"天");
+                    }
                     else{
                         if(lefthour!=0)
                             timetext.setText(remain+lefthour+"小时");
@@ -350,17 +354,17 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if((mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24)) != 0){
-                    TimeOnPic.setText("已经过去"+String.valueOf(mDay)+"天");
+                    TimeOnPic.setText("已经"+String.valueOf(mDay+1)+"天");
                 }
                 else if(calendar.get(Calendar.HOUR_OF_DAY) != 0){
                     //已过天数小于一天，显示已过小时数
-                    TimeOnPic.setText("已经过去"+String.valueOf(calendar.get(Calendar.HOUR_OF_DAY))+"小时");
+                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.HOUR_OF_DAY))+"小时");
                 }
                 else if(calendar.get(Calendar.MINUTE) != 0){
-                    TimeOnPic.setText("已经过去"+String.valueOf(calendar.get(Calendar.MINUTE))+"分钟");
+                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.MINUTE))+"分钟");
                 }
                 else if(calendar.get(Calendar.SECOND) != 0){
-                    TimeOnPic.setText("已经过去"+String.valueOf(calendar.get(Calendar.SECOND))+"秒");
+                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.SECOND))+"秒");
                 }
             }
             else{

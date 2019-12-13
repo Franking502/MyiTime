@@ -54,7 +54,7 @@ public class DetailActivity extends AppCompatActivity {
             if (msg.what == 1) {
                 computeTime();
                 if(mDay<0){
-                    remainText.setText("已过");
+                    remainText.setText("已经");
                     mDays_Tv.setText((-mDay)+"");//天数不用补位
                 }
                 mHours_Tv.setText(getTv(mHour));
@@ -109,7 +109,7 @@ public class DetailActivity extends AppCompatActivity {
 
         //获取还有多少天
         String s1= String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date);
-        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
+        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE)+1);
         DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
         Date d1= null;
         try {
@@ -251,7 +251,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 //获取还有多少天
                 String s1= String.valueOf(this.year)+'-'+String.valueOf(this.month)+'-'+String.valueOf(this.date);
-                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
+                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE)+1);
                 DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
                 Date d1= null;
                 try {
