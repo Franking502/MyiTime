@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class DetailActivity extends AppCompatActivity {
     TextView titleText;
     TextView setTime;
     TextView mDays_Tv, mHours_Tv, mMinutes_Tv, mSeconds_Tv,remainText;
+    EditText editTitle;
     public static final int ITEM_DETAIL = 902;
 
     //下面的具体时间通过系统时间获得，现在先初始化做倒计时
@@ -158,8 +160,9 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(DetailActivity.this,MainActivity.class);
-                /*在这里获取当前剩余时间和设定的时间并返回*/
+                /*在这里获取当前剩余时间和设定的时间还有图片并返回*/
                 intent.putExtra("back",111);
+                intent.putExtra("name",titleText.getText().toString());
                 intent.putExtra("state",remainText.getText().toString());
                 intent.putExtra("leftday",mDay);
                 intent.putExtra("lefthour",mHour);
@@ -167,7 +170,6 @@ public class DetailActivity extends AppCompatActivity {
                 intent.putExtra("leftsecond",mSecond);
                 intent.putExtra("settime",setTime.getText().toString());
                 intent.putExtra("position",index);
-                //还要获取设定的图片！！！！！！！！！！！！！！！！！
                 intent.putExtra("image",image);
                 setResult(ITEM_DETAIL,intent);
                 DetailActivity.this.finish();

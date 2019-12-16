@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 if(ifback==111){
                     //返回处理，接收数据
                     String remain=data.getStringExtra("state");
+                    String title=data.getStringExtra("name");
                     long leftday=data.getLongExtra("leftday",0);
                     long lefthour=data.getLongExtra("lefthour",0);
                     long leftminute=data.getLongExtra("leftminute",0);
@@ -184,11 +185,15 @@ public class MainActivity extends AppCompatActivity {
                     int index=data.getIntExtra("position",0);
                     int image=data.getIntExtra("image",R.drawable.pic1);
                     //改变index位置上的数据！！！！
+                    TextView titletext=listViewItems.getChildAt(index).findViewById(R.id.item_name);
+                    titletext.setText(title);
                     TextView timetext=listViewItems.getChildAt(index).findViewById(R.id.text_view_lefttime);
                     TextView setTimeText=listViewItems.getChildAt(index).findViewById(R.id.item_description);
                     setTimeText.setText(settime);
                     ImageView imageview=listViewItems.getChildAt(index).findViewById(R.id.item_image_view);
                     imageview.setImageResource(image);
+                    listItem.get(index).setCoverResourceId(image);
+
                     if(leftday!=0){
                         if(leftday<0){
                             leftday=-leftday;
@@ -218,9 +223,11 @@ public class MainActivity extends AppCompatActivity {
                 String setTime=data.getStringExtra("settime");
                 TextView timetext=listViewItems.getChildAt(position).findViewById(R.id.text_view_lefttime);
                 TextView setTimeText=listViewItems.getChildAt(position).findViewById(R.id.item_description);
+                ImageView coverimage=listViewItems.getChildAt(position).findViewById(R.id.item_image_view);
                 setTimeText.setText(setTime);
                 //在这里设置相应位置上的item的图片！！
                 listItem.get(position).setCoverResourceId(image);
+                coverimage.setImageResource(image);
                 adapter.notifyDataSetChanged();
                 if(leftday>0){
                     timetext.setText("还有"+leftday+"天");
