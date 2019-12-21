@@ -31,11 +31,6 @@ public class AddActivity extends AppCompatActivity {
     private List<EditItem> listEditItem = new ArrayList<EditItem>();
     private ImageButton buttonDone,buttonBack;
     private EditText editName,editRemark;
-    private String Title;//活动名称
-    private String Description;//活动描述
-    private int year;//事件年份
-    private int month;//事件月份
-    private int date;//事件日期
     private ImageView Backgroundimg;
 
     //每次打开这个页面都要初始化list，添加日期、重复、图片、置顶四个功能

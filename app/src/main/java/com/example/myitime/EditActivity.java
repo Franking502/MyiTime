@@ -83,6 +83,7 @@ public class EditActivity extends AppCompatActivity {
             //点击确认后将该页面上设置的信息传回详情页面
             Intent intent=new Intent();
             intent.putExtra("title",editName.getText().toString());
+            int tmp=listEditItem.get(0).getYear();
             intent.putExtra("year",listEditItem.get(0).getYear());
             intent.putExtra("month",listEditItem.get(0).getMonth());
             intent.putExtra("date",listEditItem.get(0).getDate());

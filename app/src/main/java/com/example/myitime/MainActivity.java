@@ -55,28 +55,37 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_ITEM_ADD = 901;
     public static final int ITEM_DETAIL = 902;
-    public static final int ITEM_DEL = 904;
     ListView listViewItems;
     private List<Item> listItem = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
-    FloatingActionButton addButton;
     ItemAdapter adapter;
     TextView TimeOnPic;
     ItemSaver itemSaver;
-
-    TextView mDays_Tv, mHours_Tv, mMinutes_Tv, mSeconds_Tv;
-    private Timer mTimer;
-    //下面的具体时间通过系统时间获得，现在先初始化做倒计时
-    Calendar calendar = Calendar.getInstance();
     private long mDay;// 天
-    private long mHour;//小时,
-    private long mMin;//分钟,
-    private long mSecond;//秒
+    Timer mTimer = new Timer();
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         itemSaver.save();
+    }
+
+    private Handler refreshHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            adapter.notifyDataSetChanged();
+        }
+    };
+    private void startRun() {
+        TimerTask mTimerTask = new TimerTask() {
+
+            public void run() {
+                Message message = Message.obtain();
+                refreshHandler.sendMessage(message);
+            }
+        };
+        mTimer.schedule(mTimerTask,0,1000);
     }
 
     @Override
@@ -91,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ItemAdapter(
                 MainActivity.this, R.layout.list_view_item, listItem);
         listViewItems.setAdapter(adapter);
-
+        startRun();
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
         NavigationView navView=(NavigationView)findViewById(R.id.nav_view); //nav_view是drawer中的内容
         ActionBar actionBar=getSupportActionBar();
@@ -116,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (menuItem.getTitle().equals("主题色")) {
                     Toast.makeText(MainActivity.this,"主题色",Toast.LENGTH_SHORT).show();
+
                 }
 
                 if(menuItem.getTitle().equals("设置")){
@@ -175,53 +185,32 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(ifback==111){
                     //返回处理，接收数据
-                    String remain=data.getStringExtra("state");
                     String title=data.getStringExtra("name");
-                    long leftday=data.getLongExtra("leftday",0);
-                    long lefthour=data.getLongExtra("lefthour",0);
-                    long leftminute=data.getLongExtra("leftminute",0);
-                    long leftsecond=data.getLongExtra("leftsecond",0);
-                    String settime=data.getStringExtra("settime");
+                    //返回设定的年月日，更改list中的item的年月日属性，不能只改剩余时间
+                    int year=data.getIntExtra("year",0);
+                    int month=data.getIntExtra("month",0);
+                    int date=data.getIntExtra("date",0);
+
                     int index=data.getIntExtra("position",0);
                     int image=data.getIntExtra("image",R.drawable.pic1);
                     //改变index位置上的数据！！！！
                     TextView titletext=listViewItems.getChildAt(index).findViewById(R.id.item_name);
                     titletext.setText(title);
-                    TextView timetext=listViewItems.getChildAt(index).findViewById(R.id.text_view_lefttime);
-                    TextView setTimeText=listViewItems.getChildAt(index).findViewById(R.id.item_description);
-                    setTimeText.setText(settime);
                     ImageView imageview=listViewItems.getChildAt(index).findViewById(R.id.item_image_view);
                     imageview.setImageResource(image);
-                    listItem.get(index).setCoverResourceId(image);
-
-                    if(leftday!=0){
-                        if(leftday<0){
-                            leftday=-leftday;
-                        }
-                        timetext.setText(remain+leftday+"天");
-                    }
-                    else{
-                        if(lefthour!=0)
-                            timetext.setText(remain+lefthour+"小时");
-                        else{
-                            if(leftminute!=0)
-                                timetext.setText(remain+leftminute+"分钟");
-                            else
-                                timetext.setText(remain+leftsecond+"秒");
-                        }
-                    }
+                    getListItem().get(index).setCoverResourceId(image);
+                    getListItem().get(index).setYear(year);
+                    getListItem().get(index).setMonth(month);
+                    getListItem().get(index).setDate(date);
+                    getListItem().get(index).setTitle(title);
+                    adapter.notifyDataSetChanged();
                 }
             break;
             case RESULT_CANCELED:
                 //在这里接收剩余时间并进行设置
-                long leftday=data.getLongExtra("leftday",0);
-                long lefthour=data.getLongExtra("lefthour",0);
-                long leftminute=data.getLongExtra("leftminute",0);
-                long leftsecond=data.getLongExtra("leftsecond",0);
                 int position=data.getIntExtra("position",0);
                 int image=data.getIntExtra("image",0);
                 String setTime=data.getStringExtra("settime");
-                TextView timetext=listViewItems.getChildAt(position).findViewById(R.id.text_view_lefttime);
                 TextView setTimeText=listViewItems.getChildAt(position).findViewById(R.id.item_description);
                 ImageView coverimage=listViewItems.getChildAt(position).findViewById(R.id.item_image_view);
                 setTimeText.setText(setTime);
@@ -229,40 +218,6 @@ public class MainActivity extends AppCompatActivity {
                 listItem.get(position).setCoverResourceId(image);
                 coverimage.setImageResource(image);
                 adapter.notifyDataSetChanged();
-                if(leftday>0){
-                    timetext.setText("还有"+leftday+"天");
-                }
-                else if(leftday==0){
-                    if(lefthour>0){
-                        timetext.setText("还有"+lefthour+"小时");
-                    }
-                    else{
-                        if(leftminute>0){
-                            timetext.setText("还有"+leftminute+"分钟");
-                        }
-                        else{
-                            timetext.setText("还有"+leftsecond+"秒");
-                        }
-                    }
-                }
-                else {
-                    if(-leftday>0){
-                        timetext.setText("已经"+(-leftday)+"天");
-                    }
-                    else if(-leftday==0){
-                        if(lefthour>0){
-                            timetext.setText("已经"+lefthour+"小时");
-                        }
-                        else{
-                            if(leftminute>0){
-                                timetext.setText("已经"+leftminute+"分钟");
-                            }
-                            else{
-                                timetext.setText("还有"+leftsecond+"秒");
-                                }
-                            }
-                        }
-                    }
             break;
         }
     }
@@ -361,14 +316,14 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if((mDay=(d2.getTime()-d1.getTime())/(60*60*1000*24)) != 0){
-                    TimeOnPic.setText("已经"+String.valueOf(mDay+1)+"天");
+                    TimeOnPic.setText("已经"+String.valueOf(mDay)+"天"+String.valueOf(calendar.get(Calendar.HOUR_OF_DAY))+"小时");
                 }
                 else if(calendar.get(Calendar.HOUR_OF_DAY) != 0){
                     //已过天数小于一天，显示已过小时数
-                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.HOUR_OF_DAY))+"小时");
+                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.HOUR_OF_DAY))+"小时"+String.valueOf(calendar.get(Calendar.MINUTE))+"分钟"+String.valueOf(calendar.get(Calendar.SECOND))+"秒");
                 }
                 else if(calendar.get(Calendar.MINUTE) != 0){
-                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.MINUTE))+"分钟");
+                    TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.MINUTE))+"分钟"+String.valueOf(calendar.get(Calendar.SECOND))+"秒");
                 }
                 else if(calendar.get(Calendar.SECOND) != 0){
                     TimeOnPic.setText("已经"+String.valueOf(calendar.get(Calendar.SECOND))+"秒");
@@ -391,15 +346,15 @@ public class MainActivity extends AppCompatActivity {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if((mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24)) != 0){
-                    TimeOnPic.setText("还有"+String.valueOf(mDay)+"天");
+                if((mDay=(d1.getTime()-d2.getTime())/(60*60*1000*24))-1 != 0){
+                    TimeOnPic.setText("还有"+String.valueOf(mDay)+"天"+String.valueOf(24-calendar.get(Calendar.HOUR_OF_DAY))+"小时");
                 }
                 else if(24-calendar.get(Calendar.HOUR_OF_DAY) != 0){
                     //距离天数小于一天，显示距离小时数
-                    TimeOnPic.setText("还有"+String.valueOf(24-calendar.get(Calendar.HOUR_OF_DAY))+"小时");
+                    TimeOnPic.setText("还有"+String.valueOf(24-calendar.get(Calendar.HOUR_OF_DAY))+"小时"+String.valueOf(60-calendar.get(Calendar.MINUTE))+"分钟");
                 }
                 else if(60-calendar.get(Calendar.MINUTE) != 0){
-                    TimeOnPic.setText("还有"+String.valueOf(60-calendar.get(Calendar.MINUTE))+"分钟");
+                    TimeOnPic.setText("还有"+String.valueOf(60-calendar.get(Calendar.MINUTE))+"分钟"+String.valueOf(60-calendar.get(Calendar.SECOND))+"秒");
                 }
                 else if(60-calendar.get(Calendar.SECOND) != 0){
                     TimeOnPic.setText("还有"+String.valueOf(60-calendar.get(Calendar.SECOND))+"秒");

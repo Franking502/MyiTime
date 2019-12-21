@@ -55,9 +55,13 @@ public class DetailActivity extends AppCompatActivity {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 computeTime();
-                if(mDay<0){
+                if(mDay<=0){
                     remainText.setText("已经");
                     mDays_Tv.setText((-mDay)+"");//天数不用补位
+                }
+                else{
+                    remainText.setText("还有");
+                    mDays_Tv.setText((mDay)+"");//天数不用补位
                 }
                 mHours_Tv.setText(getTv(mHour));
                 mMinutes_Tv.setText(getTv(mMin));
@@ -104,14 +108,11 @@ public class DetailActivity extends AppCompatActivity {
         index=getIntent().getIntExtra("position",0);
         backGround.setImageResource(image);
         setTime.setText(String.valueOf(year)+'年'+String.valueOf(month)+'月'+String.valueOf(date)+'日');
-        //获取当前时间，剩余天数由下面获得，24-当前小时为剩余小时，60-当前分为剩余分，60-当前秒为剩余秒
-        mHour=24 - calendar.get(Calendar.HOUR_OF_DAY);
-        mMin=60 - calendar.get(Calendar.MINUTE);
-        mSecond=60 - calendar.get(Calendar.SECOND);
+
 
         //获取还有多少天
         String s1= String.valueOf(year)+'-'+String.valueOf(month)+'-'+String.valueOf(date);
-        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE)+1);
+        String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
         DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
         Date d1= null;
         try {
@@ -126,6 +127,19 @@ public class DetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         mDay = (d1.getTime()-d2.getTime())/(60*60*1000*24);
+        if(mDay <= 0){
+            //获取当前时间，剩余天数由下面获得，24-当前小时为剩余小时，60-当前分为剩余分，60-当前秒为剩余秒
+            mHour=calendar.get(Calendar.HOUR_OF_DAY);
+            mMin=calendar.get(Calendar.MINUTE);
+            mSecond=calendar.get(Calendar.SECOND);
+        }
+        else{
+            //获取当前时间，剩余天数由下面获得，24-当前小时为剩余小时，60-当前分为剩余分，60-当前秒为剩余秒
+            mHour=24 - calendar.get(Calendar.HOUR_OF_DAY);
+            mMin=24 - calendar.get(Calendar.MINUTE);
+            mSecond=24 - calendar.get(Calendar.SECOND);
+        }
+
         startRun();
 
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -164,11 +178,16 @@ public class DetailActivity extends AppCompatActivity {
                 intent.putExtra("back",111);
                 intent.putExtra("name",titleText.getText().toString());
                 intent.putExtra("state",remainText.getText().toString());
+
+                intent.putExtra("year",year);
+                intent.putExtra("month",month);
+                intent.putExtra("date",date);
+
                 intent.putExtra("leftday",mDay);
                 intent.putExtra("lefthour",mHour);
                 intent.putExtra("leftminute",mMin);
                 intent.putExtra("leftsecond",mSecond);
-                intent.putExtra("settime",setTime.getText().toString());
+                intent.putExtra("settime",String.valueOf(year)+'年'+String.valueOf(month)+'月'+String.valueOf(date)+'日');
                 intent.putExtra("position",index);
                 intent.putExtra("image",image);
                 setResult(ITEM_DETAIL,intent);
@@ -194,7 +213,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     private void computeTime() {
         //未过
-        if(mDay>=0) {
+        if(mDay>0) {
             mSecond--;
             if (mSecond < 0) {
                 mMin--;
@@ -212,7 +231,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
         //已过
-        else if(mDay<0){
+        else if(mDay<=0){
             mSecond++;
             if (mSecond > 60) {
                 mMin++;
@@ -244,16 +263,13 @@ public class DetailActivity extends AppCompatActivity {
                 this.month=data.getIntExtra("month",1);
                 this.date=data.getIntExtra("date",1);
                 this.image=data.getIntExtra("image",R.drawable.pic1);
-                int pic = R.drawable.pic1;
-                int pic2 = this.image;
                 backGround.setImageResource(image);
-                boolean stick=data.getBooleanExtra("stick",false);
                 titleText.setText(title);
                 setTime.setText(String.valueOf(this.year)+'年'+String.valueOf(this.month)+'月'+String.valueOf(this.date)+'日');
 
                 //获取还有多少天
                 String s1= String.valueOf(this.year)+'-'+String.valueOf(this.month)+'-'+String.valueOf(this.date);
-                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE)+1);
+                String s2 = String.valueOf(calendar.get(Calendar.YEAR))+'-'+String.valueOf(calendar.get(Calendar.MONTH)+1)+'-'+String.valueOf(calendar.get(Calendar.DATE));
                 DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
                 Date d1= null;
                 try {
@@ -268,7 +284,8 @@ public class DetailActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 this.mDay = (d1.getTime()-d2.getTime())/(60*60*1000*24);
-                startRun();
+
+                //startRun();
         }
     }
 }
